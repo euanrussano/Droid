@@ -107,4 +107,12 @@ public class Arena {
     public Object[][] getGrid() {
         return grid;
     }
+
+    public int getWidth() {
+        return grid[0].length;
+    }
+
+    public int getHeight() {
+        return grid.length;
+    }
 }
