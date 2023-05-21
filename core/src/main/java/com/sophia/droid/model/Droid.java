@@ -11,7 +11,7 @@ public class Droid {
     private float rotation = 0f;
 
     private float damage = 2f;
-
+    private Arena arena;
 
 
     public float getX() {
@@ -74,4 +74,11 @@ public class Droid {
 
     }
 
+    public Arena getArena() {
+        return arena;
+    }
+
+    public void setArena(Arena arena) {
+        this.arena = arena;
+    }
 }

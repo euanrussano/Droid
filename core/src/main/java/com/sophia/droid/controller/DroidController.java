@@ -6,11 +6,9 @@ import com.sophia.droid.model.Droid;
 import com.sophia.droid.model.Enemy;
 import com.sophia.droid.model.Obstacle;
 
-public class ArenaController {
+public class DroidController {
 
-    //private static final int unit = 32;
-    private Arena arena;
-
+    private Droid droid;
     /** the target cell **/
     private float targetX, targetY;
 
@@ -19,16 +17,16 @@ public class ArenaController {
     private Rectangle droidBounds;
     private Rectangle objBounds;
 
-    public ArenaController(Arena arena) {
+    public DroidController(Droid droid) {
 
-        this.arena = arena;
+        this.droid = droid;
         this.droidBounds = new Rectangle(0f, 0f, 1f, 1f);
         this.objBounds = new Rectangle(-1f, -1f, 1f, 1f);
     }
 
     public void update(float delta) {
-        Droid droid = arena.getDroid();
 
+        Arena arena = droid.getArena();
         if (moving) {
             // current position
             float newPositionX = droid.getX();
@@ -105,6 +103,7 @@ public class ArenaController {
     /** triggered with the coordinates every click **/
 
     public boolean onClick(int x, int y) {
+        Arena arena = droid.getArena();
 
         System.out.println(x + "," + y);
         System.out.println(arena.getWidth() + "," + arena.getHeight());

@@ -9,17 +9,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.sophia.droid.model.Arena;
 import com.sophia.droid.view.Renderer;
 import com.sophia.droid.view.SimpleArenaRenderer;
-import com.sophia.droid.controller.ArenaController;
+import com.sophia.droid.controller.DroidController;
 import com.sophia.droid.model.Droid;
 
-public class TinyCivGame extends Game implements InputProcessor {
+public class DroidGame extends Game implements InputProcessor {
 
 
 	private Arena arena;
 
 	private Droid droid;
 	private Renderer renderer;
-	private ArenaController controller;
+	private DroidController droidController;
 	@Override
 	public void create() {
 		droid = new Droid();
@@ -32,8 +32,9 @@ public class TinyCivGame extends Game implements InputProcessor {
 
 		// view
 		renderer = new SimpleArenaRenderer(arena);
+
 		// controller
-		controller = new ArenaController(arena);
+		droidController = new DroidController(droid);
 
 		Gdx.input.setInputProcessor(this);
 
@@ -46,7 +47,7 @@ public class TinyCivGame extends Game implements InputProcessor {
 
 	@Override
 	public void render() {
-		controller.update(Gdx.graphics.getDeltaTime());
+		droidController.update(Gdx.graphics.getDeltaTime());
 		ScreenUtils.clear(Color.BLACK);
 		renderer.render();
 
@@ -75,7 +76,7 @@ public class TinyCivGame extends Game implements InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		Vector3 unproject = renderer.unproject(new Vector3(screenX, screenY, 0));
-		controller.onClick((int)unproject.x, (int)unproject.y);
+		droidController.onClick((int)unproject.x, (int)unproject.y);
 		return false;
 	}
 

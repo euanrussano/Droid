@@ -31,7 +31,6 @@ public class Arena {
         this.droid = droid;
 
 
-
         grid = new Object[HEIGHT][WIDTH];
 
         for (int i = 0; i < WIDTH; i++) {
@@ -47,6 +46,7 @@ public class Arena {
         // add the droid
 
         grid[(int)droid.getY()][(int) droid.getX()] = droid;
+        this.droid.setArena(this);
 
         // add 5 obstacles and 5 enemies at random positions
 
