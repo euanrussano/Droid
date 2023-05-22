@@ -1,6 +1,11 @@
 package com.sophia.droid.model;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+
 public class Droid {
+
+    public boolean isSelected = false;
 
     private float x;
 
@@ -12,6 +17,7 @@ public class Droid {
 
     private float damage = 2f;
     private Arena arena;
+    private Vector2 target = null;
 
 
     public float getX() {
@@ -80,5 +86,21 @@ public class Droid {
 
     public void setArena(Arena arena) {
         this.arena = arena;
+    }
+
+    public void setTarget(int targetX, int targetY) {
+        this.target = new Vector2(targetX, targetY);
+    }
+
+    public boolean hasTarget() {
+        return this.target != null;
+    }
+
+    public Vector2 getTarget() {
+        return this.target;
+    }
+
+    public void removeTarget() {
+        this.target = null;
     }
 }

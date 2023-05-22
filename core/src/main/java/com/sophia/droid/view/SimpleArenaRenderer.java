@@ -2,6 +2,7 @@ package com.sophia.droid.view;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -59,16 +60,29 @@ public class SimpleArenaRenderer implements Renderer{
         }
 
         // render player droid
-        shapeRenderer.setColor(Color.GREEN);
-        Droid droid = arena.getDroid();
-        float x = droid.getX();
-        float y = droid.getY();
-        shapeRenderer.circle(x + 0.5f, y + 0.5f, 0.8f/2f, 10);
-        // render square on droid
-        shapeRenderer.setColor(Color.BROWN);
-        shapeRenderer.rect(x + 0.4f, y + 0.4f, 0.2f, 0.2f);
+        for (Droid droid : arena.getDroidService().findAll()) {
+            float x = droid.getX();
+            float y = droid.getY();
+            shapeRenderer.setColor(Color.GREEN);
+            shapeRenderer.circle(x + 0.5f, y + 0.5f, 0.8f/2f, 10);
+            // render square on droid
+            if (droid.isSelected) {
+                shapeRenderer.setColor(Color.BROWN);
+                shapeRenderer.rect(x + 0.4f, y + 0.4f, 0.2f, 0.2f);
+            }
+        }
 
         shapeRenderer.end();
+
+        // render selection rectangle
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.WHITE);
+        Rectangle selRec = arena.getSelectionRectangle();
+        shapeRenderer.rect(selRec.x, selRec.y, selRec.width, selRec.height);
+        shapeRenderer.end();
+
+
+
 
     }
 
