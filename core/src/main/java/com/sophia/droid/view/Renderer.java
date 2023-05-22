@@ -16,4 +16,6 @@ public interface Renderer {
     Adjust the renderer view to the screen size
      */
     void resize(int width, int height);
+
+    Camera getCamera();
 }

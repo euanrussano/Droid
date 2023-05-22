@@ -1,11 +1,11 @@
 package com.sophia.droid;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.sophia.droid.controller.OrthoCamController;
 import com.sophia.droid.model.Arena;
 import com.sophia.droid.repository.DroidRepository;
 import com.sophia.droid.service.DroidService;
@@ -19,6 +19,8 @@ public class DroidGame extends Game implements InputProcessor {
 	private Arena arena;
 	private Renderer renderer;
 	private ArenaController arenaController;
+	private OrthoCamController camController;
+
 	@Override
 	public void create() {
 		DroidRepository droidRepository = new DroidRepository();
@@ -34,9 +36,13 @@ public class DroidGame extends Game implements InputProcessor {
 		renderer = new SimpleArenaRenderer(arena);
 
 		// controller
-		arenaController = new ArenaController(arena);
+		arenaController = new ArenaController(renderer, arena);
+		camController = new OrthoCamController((OrthographicCamera) renderer.getCamera());
 
-		Gdx.input.setInputProcessor(this);
+		InputMultiplexer im = new InputMultiplexer();
+		im.addProcessor(camController);
+		im.addProcessor(this);
+		Gdx.input.setInputProcessor(im);
 
 	}
 
@@ -60,6 +66,17 @@ public class DroidGame extends Game implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
+		if (keycode == Input.Keys.P){
+			// pan mode
+			InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
+			im.removeProcessor(arenaController);
+			im.addProcessor(camController);
+		} else if (keycode == Input.Keys.S){
+			// select mode
+			InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
+			im.removeProcessor(camController);
+			im.addProcessor(arenaController);
+		}
 		return false;
 	}
 
@@ -76,21 +93,21 @@ public class DroidGame extends Game implements InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		Vector3 unproject = renderer.unproject(new Vector3(screenX, screenY, 0));
-		arenaController.onClick(unproject.x, unproject.y);
+		//arenaController.onClick(unproject.x, unproject.y);
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		Vector3 unproject = renderer.unproject(new Vector3(screenX, screenY, 0));
-		arenaController.onTouchUp(unproject.x, unproject.y);
+		//arenaController.onTouchUp(unproject.x, unproject.y);
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		Vector3 unproject = renderer.unproject(new Vector3(screenX, screenY, 0));
-		arenaController.onTouchDrag(unproject.x, unproject.y);
+		//arenaController.onTouchDrag(unproject.x, unproject.y);
 		return false;
 	}
 
@@ -101,6 +118,7 @@ public class DroidGame extends Game implements InputProcessor {
 
 	@Override
 	public boolean scrolled(float amountX, float amountY) {
+		//camController.scrolled(amountX, amountY);
 		return false;
 	}
 }

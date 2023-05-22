@@ -1,5 +1,6 @@
 package com.sophia.droid.view;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
@@ -94,5 +95,10 @@ public class SimpleArenaRenderer implements Renderer{
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
+    }
+
+    @Override
+    public Camera getCamera() {
+        return viewport.getCamera();
     }
 }

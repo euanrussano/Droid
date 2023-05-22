@@ -1,5 +1,6 @@
 package com.sophia.droid.controller;
 
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -9,9 +10,11 @@ import com.sophia.droid.model.Droid;
 import com.sophia.droid.model.Enemy;
 import com.sophia.droid.model.Obstacle;
 import com.sophia.droid.service.DroidService;
+import com.sophia.droid.view.Renderer;
 
-public class ArenaController {
+public class ArenaController extends InputAdapter {
 
+    private final Renderer renderer;
     private Arena arena;
     /** the target cell **/
 
@@ -22,13 +25,14 @@ public class ArenaController {
 
     private boolean dragging = false;
     private Vector3 touchPos = new Vector3();
+    private Vector3 dragPos = new Vector3();
     //private Vector3 last = new Vector3(-1, -1, -1);
     //final Vector3 curr = new Vector3();
     //final Vector3 delta = new Vector3();
 
-    public ArenaController(Arena arena) {
-
-        this.arena = arena;
+    public ArenaController(Renderer renderer, Arena arena) {
+        this.renderer = renderer; // view
+        this.arena = arena; // model
         this.droidBounds = new Rectangle(0f, 0f, 1f, 1f);
         this.objBounds = new Rectangle(-1f, -1f, 1f, 1f);
 
@@ -69,16 +73,28 @@ public class ArenaController {
                 // check if the droid will collide in the next potential move
                 // check if the bounds of the droid overlaps with any object in the grid around it
                 this.droidBounds.setPosition(newPositionX, newPositionY);
+                this.objBounds.setPosition(-1f, -1f);
+                for (Droid droid2 : arena.getDroidService().findAll()) {
+                    if (droid == droid2) continue;
+                    this.objBounds.setPosition(droid2.getX(), droid2.getY());
+                    // if it collides then stop moving and make sure the droid is inside a grid cell
+                    if (this.droidBounds.overlaps(objBounds)) {
+                        System.out.println("overlaps");
+                        droid.removeTarget();
+                        droid.setX(Math.round(droid.getX()));
+                        droid.setY(Math.round(droid.getY()));
+                    }
+                }
                 for (int i = (int) newPositionY - 1; i < newPositionY + 2; i++) {
                     for (int j = (int) newPositionX - 1; j < newPositionX + 2; j++) {
                         if (i >= arena.getGrid().length || j >= arena.getGrid()[0].length || i < 0 || j < 0) {
                             continue;
                         }
                         Object obj = arena.getGrid()[i][j];
-                        if (obj == null) continue;
-                        else if (obj instanceof Droid & obj != droid) {
-                            Droid droid2 = (Droid) obj;
-                            this.objBounds.setPosition(droid2.getX(), droid2.getY());
+                        if (obj == null) {continue;
+//                       } else if (obj instanceof Droid & obj != droid) {
+//                            Droid droid2 = (Droid) obj;
+//                            this.objBounds.setPosition(droid2.getX(), droid2.getY());
                         } else if (obj instanceof Enemy enemy) {
                             this.objBounds.setPosition(enemy.getX(), enemy.getY());
                         } else if (obj instanceof Obstacle obstacle) {
@@ -88,6 +104,7 @@ public class ArenaController {
                         // if it collides then stop moving and make sure the droid is inside a grid cell
                         if (this.objBounds.getX() != -1f) {
                             if (this.droidBounds.overlaps(objBounds)) {
+                                System.out.println("overlaps");
                                 droid.removeTarget();
                                 droid.setX(Math.round(droid.getX()));
                                 droid.setY(Math.round(droid.getY()));
@@ -115,27 +132,25 @@ public class ArenaController {
 
     }
 
-    /** triggered with the coordinates every click **/
-    public boolean onClick(float x, float y) {
-        System.out.println(x + "," + y);
-        arena.getSelectionRectangle().setPosition(x, y);
-        touchPos.set(x, y, 0);
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        touchPos = renderer.unproject(touchPos.set(screenX, screenY, 0));
+        arena.getSelectionRectangle().setPosition(touchPos.x, touchPos.y);
 
         // when clicks go outside the arena, unselect all droids
-        if ((x >= arena.getWidth()) | (y > arena.getHeight()) | (x < 0) | (y < 0)) {
+        if ((touchPos.x >= arena.getWidth()) | (touchPos.y > arena.getHeight()) | (touchPos.x < 0) | (touchPos.y < 0)) {
             for (Droid droid : arena.getDroidService().findAll()) {
                 droid.isSelected = false;
             }
             return true;
         }
-        int targetX = (int)x ;
-        int targetY = (int)y ;
+        int targetX = (int)touchPos.x ;
+        int targetY = (int)touchPos.y ;
 
         // if clicks in a droid select it and unselect the others
         for (Droid droid : arena.getDroidService().findAll()) {
             droidBounds.setPosition(droid.getX(), droid.getY());
             if (droidBounds.contains(targetX, targetY)) {
-                System.out.println(droid.isSelected);
                 for (Droid droid2 : arena.getDroidService().findAll()) {
                     if (droid2 != droid)
                         droid2.isSelected = false;
@@ -156,39 +171,44 @@ public class ArenaController {
             return true;
         }
         return false;
-
     }
 
 
-    public void onTouchDrag(float x, float y) {
-        if (x > arena.getSelectionRectangle().x) {
-            arena.getSelectionRectangle().setWidth(x - touchPos.x);
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        dragPos = renderer.unproject(dragPos.set(screenX, screenY, 0));
+        if (dragPos.x > arena.getSelectionRectangle().x) {
+            arena.getSelectionRectangle().setWidth(dragPos.x - touchPos.x);
         } else{
-            arena.getSelectionRectangle().setX(x);
-            arena.getSelectionRectangle().setWidth(touchPos.x - x);
+            arena.getSelectionRectangle().setX(dragPos.x);
+            arena.getSelectionRectangle().setWidth(touchPos.x - dragPos.x);
         }
 
-        if (y  > arena.getSelectionRectangle().y) {
-            arena.getSelectionRectangle().setHeight(y - arena.getSelectionRectangle().y);
+        if (dragPos.y  > arena.getSelectionRectangle().y) {
+            arena.getSelectionRectangle().setHeight(dragPos.y - touchPos.y);
         } else{
-            arena.getSelectionRectangle().setY(y);
-            arena.getSelectionRectangle().setHeight(touchPos.y - y);
+            arena.getSelectionRectangle().setY(dragPos.y);
+            arena.getSelectionRectangle().setHeight(touchPos.y - dragPos.y);
         }
         dragging = true;
-        System.out.println("dragging");
-        System.out.println(arena.getSelectionRectangle());
+        return true;
     }
 
-    public void onTouchUp(float x, float y) {
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        touchPos = renderer.unproject(touchPos.set(screenX, screenY, 0));
         if (dragging){
             for (Droid droid : arena.getDroidService().findAll()){
                 droidBounds.setPosition(droid.getX(), droid.getY());
                 if (arena.getSelectionRectangle().overlaps(droidBounds))
                     droid.isSelected = !droid.isSelected;
             }
-        }
+
         dragging = false;
         //last.set(-1, -1, -1);
         arena.getSelectionRectangle().setSize(0f, 0f);
+        return true;
+        }
+        return false;
     }
 }
