@@ -1,8 +1,8 @@
 package com.sophia.droid.model;
 
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
+
+import java.util.ArrayList;
 
 public class Droid {
 
@@ -12,7 +12,7 @@ public class Droid {
 
     private float y;
 
-    private float speed = 20f;
+    private float speed = 100f;
 
     private float rotation = 0f;
 
@@ -22,7 +22,9 @@ public class Droid {
 
     private float width = 1f;
     private float height = 1f;
-    private Vector2 direction = new Vector2();
+    private final Vector2 direction = new Vector2();
+    private final ArrayList<DroidStrategy> droidStrategies = new ArrayList<>();
+
 
 
     public float getX() {
@@ -124,5 +126,28 @@ public class Droid {
 
     public Vector2 getDirection() {
         return direction.cpy();
+    }
+
+    public boolean removeDroidStrategy(Class<? extends DroidStrategy> droidStrategyClass) {
+        for (DroidStrategy strategy : droidStrategies){
+            if (strategy.getClass().equals(droidStrategyClass)){
+                droidStrategies.remove(strategy);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addDroidStrategy(DroidStrategy droidStrategy) {
+        // when adding a strategy make sure that it has only one element of class
+        // e.g droid can not have 2 MoveToTarget strategies
+        removeDroidStrategy(droidStrategy.getClass());
+        this.droidStrategies.add(droidStrategy);
+    }
+
+    public void update(float delta) {
+        for (DroidStrategy droidStrategy : droidStrategies){
+            droidStrategy.update(this, delta);
+        }
     }
 }

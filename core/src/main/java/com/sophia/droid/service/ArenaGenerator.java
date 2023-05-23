@@ -1,9 +1,6 @@
 package com.sophia.droid.service;
 
-import com.sophia.droid.model.Arena;
-import com.sophia.droid.model.Droid;
-import com.sophia.droid.model.Enemy;
-import com.sophia.droid.model.Obstacle;
+import com.sophia.droid.model.*;
 import com.sophia.droid.repository.DroidRepository;
 import com.sophia.droid.repository.EnemyRepository;
 import com.sophia.droid.repository.ObstacleRepository;
@@ -30,11 +27,16 @@ public class ArenaGenerator {
         // use a boolean grid to mark the occupied locations
         boolean[][] occupied = new boolean[arena.getHeight()][arena.getWidth()];
 
+        DroidStrategy moveStrategy = new MoveStraightDroidStrategy();
+
         // create two droids
         Droid droid = new Droid();
         // position droid in the middle
         droid.setX(7);
         droid.setY(7);
+        // add move strategy in first droid
+        droid.addDroidStrategy(moveStrategy);
+
         arena.addDroid(droid);
         occupied[7][7] = true;
 
