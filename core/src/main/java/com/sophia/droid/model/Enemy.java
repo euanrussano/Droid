@@ -8,7 +8,11 @@ public class Enemy {
 
     private float y;
 
+    private float width = 1f;
+
+    private float height = 1f;
     private int hitpoints = 10;
+
 
 
 
@@ -46,4 +50,11 @@ public class Enemy {
 
     }
 
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
 }

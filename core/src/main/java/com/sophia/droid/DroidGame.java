@@ -2,25 +2,15 @@ package com.sophia.droid;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.sophia.droid.controller.OrthoCamController;
-import com.sophia.droid.model.Arena;
-import com.sophia.droid.repository.DroidRepository;
-import com.sophia.droid.screens.ArenaScreen;
+import com.sophia.droid.screens.ArenaStageScreen;
 import com.sophia.droid.screens.MainMenuScreen;
-import com.sophia.droid.service.DroidService;
-import com.sophia.droid.view.Renderer;
-import com.sophia.droid.view.SimpleArenaRenderer;
-import com.sophia.droid.controller.ArenaController;
+//import com.sophia.droid.controller.ArenaController;
 
 public class DroidGame extends Game implements InputProcessor {
 
@@ -52,7 +42,7 @@ public class DroidGame extends Game implements InputProcessor {
 	}
 
 	public void newGame(){
-		setScreen(new ArenaScreen(this));
+		setScreen(new ArenaStageScreen(this));
 	}
 
 	@Override

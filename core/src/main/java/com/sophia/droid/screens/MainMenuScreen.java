@@ -11,8 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.sophia.droid.DroidGame;
-import com.sophia.droid.view.Renderer;
-import jdk.jshell.spi.ExecutionControl;
 
 public class MainMenuScreen implements Screen {
 

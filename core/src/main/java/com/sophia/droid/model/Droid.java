@@ -19,6 +19,8 @@ public class Droid {
     private Arena arena;
     private Vector2 target = null;
 
+    private float width = 1f;
+    private float height = 1f;
 
     public float getX() {
 
@@ -102,5 +104,13 @@ public class Droid {
 
     public void removeTarget() {
         this.target = null;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
     }
 }

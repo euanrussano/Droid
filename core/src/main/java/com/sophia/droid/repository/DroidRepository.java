@@ -15,14 +15,14 @@ public class DroidRepository {
         Droid droid = new Droid();
 
         // position droid in the middle
-        droid.setX(Arena.WIDTH / 2);
-        droid.setY(Arena.HEIGHT / 2);
+        droid.setX(7);
+        droid.setY(7);
 
         Droid droid2 = new Droid();
 
         // position droid in the left corner
-        droid2.setX(Arena.WIDTH / 3);
-        droid2.setY(Arena.HEIGHT / 3);
+        droid2.setX(3);
+        droid2.setY(3);
 
         droids.add(droid);
         droids.add(droid2);
