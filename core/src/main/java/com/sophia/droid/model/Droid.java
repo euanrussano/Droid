@@ -1,5 +1,6 @@
 package com.sophia.droid.model;
 
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -11,7 +12,7 @@ public class Droid {
 
     private float y;
 
-    private float speed = 2f;
+    private float speed = 20f;
 
     private float rotation = 0f;
 
@@ -21,6 +22,8 @@ public class Droid {
 
     private float width = 1f;
     private float height = 1f;
+    private Vector2 direction = new Vector2();
+
 
     public float getX() {
 
@@ -91,6 +94,7 @@ public class Droid {
     }
 
     public void setTarget(int targetX, int targetY) {
+
         this.target = new Vector2(targetX, targetY);
     }
 
@@ -112,5 +116,13 @@ public class Droid {
 
     public float getHeight() {
         return height;
+    }
+
+    public void setDirection(Vector2 direction) {
+        this.direction.set(direction);
+    }
+
+    public Vector2 getDirection() {
+        return direction.cpy();
     }
 }

@@ -7,12 +7,17 @@ import java.util.Random;
 public class Arena {
 
 
+    public void setWidth(int width) {
+        this.width = width;
+    }
 
-    private final int width = 15;
+    public void setHeight(int height) {
+        this.height = height;
+    }
 
-    private final int height = 10;
+    private int width = 1;
 
-    private static Random random = new Random(0); //System.currentTimeMillis()
+    private int height = 1;
 
 
     private List<Obstacle> obstacles = new ArrayList<Obstacle>();
@@ -22,7 +27,9 @@ public class Arena {
 
 
 
-    public Arena() {
+    public Arena(int width, int height) {
+        this.width = width;
+        this.height = height;
     }
 
 
@@ -48,32 +55,15 @@ public class Arena {
     }
 
     public void addDroid(Droid droid) {
-
         droids.add(droid);
         droid.setArena(this);
     }
 
-    public void populate() {
+    public void addEnemy(Enemy enemy) {
+        enemies.add(enemy);
+    }
 
-        // add obstacles and enemies at random positions
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                boolean occupied = false;
-                for (Droid droid : droids){
-                    if (droid.getX() == x & droid.getY() == y){
-                        occupied = true;
-                        break;
-                    }
-                }
-                if (occupied) continue;
-                float p = random.nextFloat();
-                if (p<0.05){
-                    obstacles.add(new Obstacle(x, y));
-                }else if (p < 0.1){
-                    enemies.add(new Enemy(x, y));
-                }
-            }
-        }
-
+    public void addObstacle(Obstacle obstacle) {
+        obstacles.add(obstacle);
     }
 }

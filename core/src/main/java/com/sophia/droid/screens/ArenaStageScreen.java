@@ -3,13 +3,12 @@ package com.sophia.droid.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.sophia.droid.DroidGame;
 import com.sophia.droid.actor.*;
+import com.sophia.droid.controller.CollisionManager;
 import com.sophia.droid.controller.DroidController;
 import com.sophia.droid.controller.OrthoCamController;
 import com.sophia.droid.model.Arena;
@@ -17,7 +16,9 @@ import com.sophia.droid.model.Droid;
 import com.sophia.droid.model.Enemy;
 import com.sophia.droid.model.Obstacle;
 import com.sophia.droid.repository.DroidRepository;
-import com.sophia.droid.service.DroidService;
+import com.sophia.droid.repository.EnemyRepository;
+import com.sophia.droid.repository.ObstacleRepository;
+import com.sophia.droid.service.ArenaGenerator;
 
 public class ArenaStageScreen extends InputAdapter implements Screen {
 
@@ -26,10 +27,13 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     public Stage uiStage;
     public Arena arena;
 
+    EnemyRepository enemyRepository = new EnemyRepository();
+    ObstacleRepository obstacleRepository = new ObstacleRepository();
     DroidRepository droidRepository = new DroidRepository();
     DroidController droidController;
 
     OrthoCamController camController;
+    private CollisionManager collisionManager;
 
     public ArenaStageScreen(DroidGame game) {
         this.game = game;
@@ -41,16 +45,14 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         mainStage = new Stage(new FillViewport(20f, 20f));
         uiStage = new Stage();
 
+        collisionManager = new CollisionManager(droidRepository, enemyRepository, obstacleRepository);
+
         droidController = new DroidController(droidRepository, uiStage, mainStage);
         camController = new OrthoCamController((OrthographicCamera) mainStage.getCamera());
 
-        arena = new Arena();
-        //populate arena with droids
-        for (Droid droid : droidRepository.findAll()){
-            arena.addDroid(droid);
-        }
-        //populate arena with obstacles, enemies, etc
-        arena.populate();
+        ArenaGenerator arenaGenerator = new ArenaGenerator(droidRepository, enemyRepository, obstacleRepository);
+        arena = arenaGenerator.generateSimpleArena();
+
 
         setupMainStage();
         setupUIStage();
@@ -99,6 +101,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
 
     @Override
     public void render(float delta) {
+        collisionManager.update(delta);
         droidController.update(delta);
 
         uiStage.act(delta);

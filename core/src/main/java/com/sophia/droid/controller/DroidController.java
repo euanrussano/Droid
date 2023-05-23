@@ -1,7 +1,10 @@
 package com.sophia.droid.controller;
 
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -33,84 +36,26 @@ public class DroidController extends InputListener {
 
     public void update(float delta) {
         for (Droid droid : droidRepository.findAll()) {
-
             Arena arena = droid.getArena();
             if (droid.hasTarget()) {
-                // current position
-                float newPositionX = droid.getX();
-                float newPositionY = droid.getY();
+                // update droid direction according its current position and
+                // distance to target
+                Vector2 currentPosition = new Vector2(droid.getX(), droid.getY());
+                Vector2 distance = droid.getTarget().cpy().sub(currentPosition);
+                Vector2 direction = distance.cpy().nor();
+                droid.setDirection(direction);
 
-                // move on X
-                int bearingX = 1;
-                if (droid.getX() > droid.getTarget().x) {
-                    bearingX = -1;
+                // check if the vector distance is smaller than the speed*delta*direction,
+                // if yes, directly moves the droid to the target
+                // otherwise, do a regular move
+                if(distance.len() < direction.cpy().scl(droid.getSpeed()*delta).len()){
+                    droid.setX(droid.getTarget().x);
+                    droid.setY(droid.getTarget().y);
+                    droid.removeTarget();
+                } else {
+                    droid.setX(droid.getX() + delta*direction.x*droid.getSpeed());
+                    droid.setY(droid.getY() + delta*direction.y*droid.getSpeed());
                 }
-                if (droid.getX() != droid.getTarget().x) {
-                    // find the "potential" new position
-                    newPositionX += bearingX * droid.getSpeed() * delta;
-                    //droid.setX(droid.getX() + bearing * droid.getSpeed() * delta);
-
-                }
-                // move on Y
-                int bearingY = 1;
-                if (droid.getY() > droid.getTarget().y) {
-                    bearingY = -1;
-                }
-                if (droid.getY() != droid.getTarget().y) {
-                    // find the "potential" new position
-                    newPositionY += bearingY * droid.getSpeed() * delta;
-                    //droid.setY(droid.getY() + bearing * droid.getSpeed() * delta);
-
-                }
-
-                // check if the droid will collide in the next potential move
-                // check if the bounds of the droid overlaps with any object in the grid around it
-
-                this.droidBounds.set(newPositionX, newPositionY, droid.getWidth(), droid.getHeight());
-                for (Droid droid2 : droidRepository.findAll()) {
-                    if (droid == droid2) continue;
-                    this.objBounds.set(droid2.getX(), droid2.getY(), droid2.getWidth(), droid2.getHeight());
-                    // if it collides then stop moving and make sure the droid is inside a grid cell
-                    if (this.droidBounds.overlaps(objBounds)) {
-                        droid.removeTarget();
-                        droid.setX(Math.round(droid.getX()));
-                        droid.setY(Math.round(droid.getY()));
-                    }
-                }
-                for (Obstacle obstacle : arena.getObstacles()) {
-
-                    this.objBounds.set(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
-                    // if it collides then stop moving and make sure the droid is inside a grid cell
-                    if (this.droidBounds.overlaps(objBounds)) {
-                        droid.removeTarget();
-                        droid.setX(Math.round(droid.getX()));
-                        droid.setY(Math.round(droid.getY()));
-                    }
-                }
-                for (Enemy enemy : arena.getEnemies()) {
-
-                    this.objBounds.set(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
-                    // if it collides then stop moving and make sure the droid is inside a grid cell
-                    if (this.droidBounds.overlaps(objBounds)) {
-                        droid.removeTarget();
-                        droid.setX(Math.round(droid.getX()));
-                        droid.setY(Math.round(droid.getY()));
-                    }
-                }
-
-                if (droid.hasTarget()) {
-                    droid.setX(newPositionX);
-                    droid.setY(newPositionY);
-
-                    boolean arrivedX = Math.abs(droid.getX() - droid.getTarget().x) <  0.05f;
-                    boolean arrivedY = Math.abs(droid.getY() - droid.getTarget().y) <  0.05f;
-                    if (arrivedX & arrivedY) {
-                        droid.setX(droid.getTarget().x);
-                        droid.setY(droid.getTarget().y);
-                        droid.removeTarget();
-                    }
-                }
-
             }
         }
 

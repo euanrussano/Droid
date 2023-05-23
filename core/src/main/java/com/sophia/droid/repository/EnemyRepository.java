@@ -1,10 +1,10 @@
 package com.sophia.droid.repository;
 
-import com.sophia.droid.model.Arena;
 import com.sophia.droid.model.Droid;
+import com.sophia.droid.model.Enemy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DroidRepository extends Repository<Droid> {
+public class EnemyRepository extends Repository<Enemy> {
 }
