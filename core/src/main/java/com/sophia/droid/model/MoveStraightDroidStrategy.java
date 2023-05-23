@@ -25,7 +25,7 @@ public class MoveStraightDroidStrategy implements DroidStrategy{
                 droid.setX(droid.getTarget().x);
                 droid.setY(droid.getTarget().y);
                 droid.removeTarget();
-            } else {
+            }else {
                 droid.setX(droid.getX() + movingDistance.x);
                 droid.setY(droid.getY() + movingDistance.y);
             }

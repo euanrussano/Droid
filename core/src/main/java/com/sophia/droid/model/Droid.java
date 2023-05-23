@@ -98,6 +98,8 @@ public class Droid {
     public void setTarget(int targetX, int targetY) {
 
         this.target = new Vector2(targetX, targetY);
+        // TODO(remove the line below later - wrong location to do this!)
+        this.direction.set(this.target.cpy().sub(x, y).nor());
     }
 
     public boolean hasTarget() {
@@ -146,6 +148,7 @@ public class Droid {
     }
 
     public void update(float delta) {
+
         for (DroidStrategy droidStrategy : droidStrategies){
             droidStrategy.update(this, delta);
         }
