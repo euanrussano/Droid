@@ -32,6 +32,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     OrthoCamController camController;
     private CollisionManager collisionManager;
 
+
     public ArenaStageScreen(DroidGame game) {
         this.game = game;
 
@@ -49,7 +50,6 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
 
         ArenaGenerator arenaGenerator = new ArenaGenerator(droidRepository, enemyRepository, obstacleRepository);
         arena = arenaGenerator.generateSimpleArena();
-
 
         setupMainStage();
         setupUIStage();
@@ -106,6 +106,8 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         ScreenUtils.clear(Color.BLACK);
         mainStage.draw();
         uiStage.draw();
+
+
 
     }
 

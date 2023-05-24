@@ -41,8 +41,8 @@ public class CollisionManager {
             float dx = delta*direction.x*droid.getSpeed();
             float dy = delta*direction.y*droid.getSpeed();
 
-//            float newPositionX = droid.getX() + dx;
-//            float newPositionY = droid.getY() + dy;
+            float newPositionX = droid.getX() + dx;
+            float newPositionY = droid.getY() + dy;
 //
 //            this.droidBounds.set(newPositionX, newPositionY, droid.getWidth(), droid.getHeight());
 //            for (Droid droid2 : droidRepository.findAll()) {
@@ -60,26 +60,27 @@ public class CollisionManager {
             // make a polygon as a "ghost droid"
 //            float[] ghostDroid = new float[]{droid.getX(), droid.getY(), droid.getX() + droid.getWidth(), droid.getY(), droid.getX() + droid.getWidth(), droid.getY()+droid.getHeight(), droid.getX(), droid.getY() + droid.getHeight()};
             // TODO (Droid can "go over object when is on its side")
-            Ray ray = new Ray();
-            ray.set(droid.getX()+droid.getWidth()/2f, droid.getY()+droid.getHeight()/2f, 0, dx, dy, 0);
+//            Ray ray = new Ray();
+//            ray.set(droid.getX()+droid.getWidth()/2f, droid.getY()+droid.getHeight()/2f, 0, dx, dy, 0);
             for (Obstacle obstacle : obstacleRepository.findAll()) {
-                Vector3 minimum = new Vector3(obstacle.getX(), obstacle.getY(), 0);
-                Vector3 maximum = new Vector3(minimum.x + obstacle.getWidth(), minimum.y + obstacle.getHeight(), 0);
-                BoundingBox box = new BoundingBox(minimum, maximum);
-                Vector3 intersection = new Vector3();
+//                Vector3 minimum = new Vector3(obstacle.getX(), obstacle.getY(), 0);
+//                Vector3 maximum = new Vector3(minimum.x + obstacle.getWidth(), minimum.y + obstacle.getHeight(), 0);
+//                BoundingBox box = new BoundingBox(minimum, maximum);
+//                Vector3 intersection = new Vector3();
+                objBounds.set(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
 //                // for debugging
 //                if (ray.direction.len() > 0) {
 //                    System.out.println("droid pos = " + droid.getX() + ", " + droid.getY());
 //                    System.out.println(ray);
 //                    System.out.println("BB = " + box);
 //                }
-                if (Intersector.intersectRayBounds(ray, box, intersection)){
-                    System.out.println(ray);
+                if (Intersector.intersectSegmentRectangle(droid.getX()+droid.getWidth()/2f, droid.getY()+droid.getHeight()/2f, newPositionX, newPositionY, objBounds)){
+//                    System.out.println(ray);
                     System.out.println("droid pos = " + droid.getX() + ", " + droid.getY());
                     System.out.println("obs pos = " + obstacle.getX() + ", " + obstacle.getY());
                     System.out.println("intersects");
-                    System.out.println(intersection);
-                    System.out.println("BB = " + box);
+//                    System.out.println(intersection);
+//                    System.out.println("BB = " + box);
                     if (droid.getX() > obstacle.getX()){
                         droid.setX(obstacle.getX() + obstacle.getWidth());
                     }else if (droid.getX() < obstacle.getX()){
