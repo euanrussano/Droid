@@ -51,6 +51,8 @@ public class ArenaGenerator {
         droidRepository.save(droid);
 //        droidRepository.save(droid2);
 
+        EnemyStrategy pursueEnemyStrategy = new PursueDroidEnemyStrategy(droid, 3f);
+
         // add 5 obstacles and 5 enemies at random positions
         int x = 0;
         int y = 0;
@@ -71,6 +73,7 @@ public class ArenaGenerator {
             }while (occupied[y][x]);
 
             Enemy enemy = new Enemy(x, y);
+            enemy.addEnemyStrategy(pursueEnemyStrategy);
             arena.addEnemy(enemy);
             enemyRepository.save(enemy);
         }

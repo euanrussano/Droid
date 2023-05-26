@@ -100,9 +100,11 @@ public class DroidController extends InputListener {
 
     public void onDroidTouched(Droid droid) {
         for (Droid droid2 : droidRepository.findAll()){
-            droid2.isSelected = false;
+            if (!droid2.equals(droid)) {
+                droid2.isSelected = false;
+            }
         }
-        droid.isSelected = true;
+        droid.isSelected = !droid.isSelected;
     }
 
     public void onArenaTouched(Arena arena, float x, float y) {

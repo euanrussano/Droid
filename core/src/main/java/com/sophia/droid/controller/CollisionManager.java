@@ -20,6 +20,9 @@ public class CollisionManager {
 
     private final Rectangle droidBounds = new Rectangle(0, 0, 1, 1);
     private final Rectangle objBounds = new Rectangle(0, 0, 1, 1);
+    private final Polygon droidPoly = new Polygon(new float[]{0,0,1, 0, 1, 1, 0, 1});
+    private final Polygon objPoly = new Polygon(new float[]{0,0,1, 0, 1, 1, 0, 1});
+    private final Intersector.MinimumTranslationVector mtv = new Intersector.MinimumTranslationVector();
 
     private final Vector2 direction = new Vector2();
 
@@ -50,10 +53,9 @@ public class CollisionManager {
                 this.objBounds.set(droid2.getX(), droid2.getY(), droid2.getWidth(), droid2.getHeight());
                 // if it collides then stop moving and make sure the droid is inside a grid cell
                 if (this.droidBounds.overlaps(objBounds)) {
-                    droid.removeTarget();
+//                    droid.removeTarget();
                     droid.setDirection(direction.set(0,0));
-                    droid.setX(Math.round(droid.getX()));
-                    droid.setY(Math.round(droid.getY()));
+
                     return;
                 }
             }
@@ -62,10 +64,17 @@ public class CollisionManager {
                 objBounds.set(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
                 if (droidBounds.overlaps(objBounds)){
                     System.out.println(droid.getX() + ", " + droid.getY());
-                    droid.removeTarget();
+                    droidPoly.setPosition(droid.getX(), droid.getY());
+                    objPoly.setPosition(obstacle.getX(), obstacle.getY());
+                    if (Intersector.overlapConvexPolygons(droidPoly, objPoly, mtv)){
+                        System.out.println(mtv.depth);
+                        System.out.println(mtv.normal);
+                        droid.setX(droid.getX() + delta*mtv.depth*mtv.normal.x*droid.getSpeed());
+                        droid.setY(droid.getY() + delta*mtv.depth*mtv.normal.y*droid.getSpeed());
+                    }
+//                    droid.removeTarget();
                     droid.setDirection(direction.set(0,0));
-                    droid.setX(Math.round(droid.getX()));
-                    droid.setY(Math.round(droid.getY()));
+
                     return;
                 }
             }
@@ -74,10 +83,20 @@ public class CollisionManager {
                 this.objBounds.set(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
                 // if it collides then stop moving and make sure the droid is inside a grid cell
                 if (this.droidBounds.overlaps(objBounds)) {
-                    droid.removeTarget();
+//                    droid.removeTarget();
+                    droidPoly.setPosition(droid.getX(), droid.getY());
+                    objPoly.setPosition(enemy.getX(), enemy.getY());
+                    if (Intersector.overlapConvexPolygons(droidPoly, objPoly, mtv)){
+                        System.out.println(mtv.depth);
+                        System.out.println(mtv.normal);
+                        droid.setX(droid.getX() + delta*mtv.depth*mtv.normal.x*droid.getSpeed());
+                        droid.setY(droid.getY() + delta*mtv.depth*mtv.normal.y*droid.getSpeed());
+                        enemy.setX(enemy.getX() - delta*mtv.depth*mtv.normal.x*enemy.getSpeed());
+                        enemy.setY(enemy.getY() - delta*mtv.depth*mtv.normal.y*enemy.getSpeed());
+                        droid.setSpeed(0);
+                        enemy.setSpeed(0);
+                    }
                     droid.setDirection(direction.set(0,0));
-                    droid.setX(Math.round(droid.getX()));
-                    droid.setY(Math.round(droid.getY()));
                     return;
                 }
             }

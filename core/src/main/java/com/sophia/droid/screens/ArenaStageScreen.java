@@ -10,6 +10,7 @@ import com.sophia.droid.DroidGame;
 import com.sophia.droid.actor.*;
 import com.sophia.droid.controller.CollisionManager;
 import com.sophia.droid.controller.DroidController;
+import com.sophia.droid.controller.EnemyController;
 import com.sophia.droid.controller.OrthoCamController;
 import com.sophia.droid.model.*;
 import com.sophia.droid.repository.DroidRepository;
@@ -24,13 +25,15 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     public Stage uiStage;
     public Arena arena;
 
-    EnemyRepository enemyRepository = new EnemyRepository();
-    ObstacleRepository obstacleRepository = new ObstacleRepository();
-    DroidRepository droidRepository = new DroidRepository();
-    DroidController droidController;
+    private EnemyRepository enemyRepository = new EnemyRepository();
+    private ObstacleRepository obstacleRepository = new ObstacleRepository();
+    private DroidRepository droidRepository = new DroidRepository();
+    private DroidController droidController;
+    private EnemyController enemyController;
 
-    OrthoCamController camController;
+    private OrthoCamController camController;
     private CollisionManager collisionManager;
+
 
 
     public ArenaStageScreen(DroidGame game) {
@@ -47,6 +50,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         collisionManager = new CollisionManager(droidRepository, enemyRepository, obstacleRepository);
 
         droidController = new DroidController(droidRepository, uiStage, mainStage);
+        enemyController = new EnemyController(enemyRepository, uiStage, mainStage);
         camController = new OrthoCamController((OrthographicCamera) mainStage.getCamera());
 
         ArenaGenerator arenaGenerator = new ArenaGenerator(droidRepository, enemyRepository, obstacleRepository);
@@ -103,6 +107,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     public void render(float delta) {
         collisionManager.update(delta);
         droidController.update(delta);
+        enemyController.update(delta);
 
         uiStage.act(delta);
         mainStage.act(delta);
