@@ -37,27 +37,6 @@ public class DroidController extends InputListener {
     public void update(float delta) {
         for (Droid droid : droidRepository.findAll()) {
             droid.update(delta);
-//            Arena arena = droid.getArena();
-//            if (droid.hasTarget()) {
-//                // update droid direction according its current position and
-//                // distance to target
-//                Vector2 currentPosition = new Vector2(droid.getX(), droid.getY());
-//                Vector2 distance = droid.getTarget().cpy().sub(currentPosition);
-//                Vector2 direction = distance.cpy().nor();
-//                droid.setDirection(direction);
-//
-//                // check if the vector distance is smaller than the speed*delta*direction,
-//                // if yes, directly moves the droid to the target
-//                // otherwise, do a regular move
-//                if(distance.len() < direction.cpy().scl(droid.getSpeed()*delta).len()){
-//                    droid.setX(droid.getTarget().x);
-//                    droid.setY(droid.getTarget().y);
-//                    droid.removeTarget();
-//                } else {
-//                    droid.setX(droid.getX() + delta*direction.x*droid.getSpeed());
-//                    droid.setY(droid.getY() + delta*direction.y*droid.getSpeed());
-//                }
-//            }
         }
 
     }
@@ -65,11 +44,14 @@ public class DroidController extends InputListener {
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
         touchPos.set(x, y);
+        System.out.println("here");
+        System.out.println(event.getTarget());
         if (event.getTarget() instanceof ArenaActor arenaActor){
             Arena arena = arenaActor.getArena();
             onArenaTouched(arena, x, y);
             return true;
         } else  if (event.getTarget() instanceof DroidActor droidActor){
+            System.out.println("here 2");
             Droid droid = droidActor.getDroid();
             onDroidTouched(droid);
             return true;

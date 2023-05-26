@@ -43,6 +43,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         mainStage = new Stage(new FillViewport(20f, 20f));
         uiStage = new Stage();
 
+
         collisionManager = new CollisionManager(droidRepository, enemyRepository, obstacleRepository);
 
         droidController = new DroidController(droidRepository, uiStage, mainStage);
@@ -59,6 +60,8 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         im.addProcessor(uiStage);
         im.addProcessor(camController);
         Gdx.input.setInputProcessor(im);
+
+        mainStage.setDebugAll(true);
 
     }
 
@@ -106,7 +109,6 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         ScreenUtils.clear(Color.BLACK);
         mainStage.draw();
         uiStage.draw();
-
 
 
     }

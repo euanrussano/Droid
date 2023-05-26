@@ -12,7 +12,6 @@ public class Obstacle {
     private float height=1f;
 
 
-
     public Obstacle(float x, float y) {
 
         this.x = x;

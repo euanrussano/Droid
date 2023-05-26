@@ -27,7 +27,8 @@ public class ArenaGenerator {
         // use a boolean grid to mark the occupied locations
         boolean[][] occupied = new boolean[arena.getHeight()][arena.getWidth()];
 
-        DroidStrategy moveStrategy = new MoveStraightDroidStrategy();
+        //DroidStrategy moveStrategy = new MoveStraightDroidStrategy();
+        DroidStrategy moveStrategy = new MoveXYDroidStrategy();
 
         // create two droids
         Droid droid = new Droid();
@@ -40,15 +41,15 @@ public class ArenaGenerator {
         arena.addDroid(droid);
         occupied[7][7] = true;
 
-        Droid droid2 = new Droid();
-        // position droid in the left corner
-        droid2.setX(3);
-        droid2.setY(3);
-        arena.addDroid(droid2);
-        occupied[3][3] = true;
+//        Droid droid2 = new Droid();
+//        // position droid in the left corner
+//        droid2.setX(3);
+//        droid2.setY(3);
+//        arena.addDroid(droid2);
+//        occupied[3][3] = true;
 
         droidRepository.save(droid);
-        droidRepository.save(droid2);
+//        droidRepository.save(droid2);
 
         // add 5 obstacles and 5 enemies at random positions
         int x = 0;

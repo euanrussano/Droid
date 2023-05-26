@@ -1,18 +1,17 @@
 package com.sophia.droid.model;
 
+
 import com.badlogic.gdx.math.Vector2;
+
 
 import java.util.ArrayList;
 
 public class Droid {
 
-    public boolean isSelected = false;
-
     private float x;
-
     private float y;
-
-    private float speed = 100f;
+    public boolean isSelected = false;
+    private float speed = 10f;
 
     private float rotation = 0f;
 
@@ -100,6 +99,7 @@ public class Droid {
         this.target = new Vector2(targetX, targetY);
         // TODO(remove the line below later - wrong location to do this!)
         this.direction.set(this.target.cpy().sub(x, y).nor());
+
     }
 
     public boolean hasTarget() {

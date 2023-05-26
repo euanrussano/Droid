@@ -4,9 +4,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.sophia.droid.model.Arena;
 
-public class ArenaActor extends Actor {
+public class ArenaActor extends Group {
     private final Arena arena;
     private final ShapeRenderer shapeRenderer;
 
@@ -32,6 +33,7 @@ public class ArenaActor extends Actor {
             shapeRenderer.line(0, i, arena.getWidth(), i);
         }
         shapeRenderer.end();
+        super.draw(batch, parentAlpha);
     }
 
     public Arena getArena() {

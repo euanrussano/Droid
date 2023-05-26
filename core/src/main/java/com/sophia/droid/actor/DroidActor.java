@@ -34,11 +34,11 @@ public class DroidActor extends Actor {
         float y = droid.getY();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.GREEN);
-        shapeRenderer.circle(x + droid.getWidth()/2f, y + droid.getHeight()/2f, droid.getWidth()/2f, 10);
+        shapeRenderer.circle(x+0.5f, y+0.5f, droid.getWidth()/2f, 10);
         // render square on droid
         if (droid.isSelected) {
             shapeRenderer.setColor(Color.BROWN);
-            shapeRenderer.rect(x + 0.4f, y + 0.4f, 0.2f, 0.2f);
+            shapeRenderer.rect(x +0.4f, y +0.4f, 0.2f, 0.2f);
         }
         shapeRenderer.end();
 
