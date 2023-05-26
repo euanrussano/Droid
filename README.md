@@ -6,6 +6,10 @@ This project was generated with a template including simple application launcher
 
 This is an exercise on the use of MVC pattern for the development a interactive Java application. It is based on the tutorial available [here](https://www.javacodegeeks.com/2012/02/building-games-using-mvc-pattern.html)
 
+## Game Objective
+
+The player controls a droid in an arena. He can move the droid by touching the droid and then touching the screen. He has to collect all the coins in the arena while avoiding the enemies. The enemies can move toward the droid in a certain radius. When the enemy touches the droid it causes a certain damage. The player loses when the droid is destroyed.
+
 ## Gradle
 
 This project uses [Gradle](http://gradle.org/) to manage dependencies.
