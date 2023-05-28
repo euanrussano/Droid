@@ -1,6 +1,7 @@
 package com.sophia.droid.model;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 
 import java.util.ArrayList;
 
@@ -8,47 +9,29 @@ public class Enemy {
 
 
     private final ArrayList<EnemyStrategy> enemyStrategies = new ArrayList<>();
-    private float x;
-
-    private float y;
-
     private float width = 1f;
 
     private float height = 1f;
     private int hitpoints = 10;
     private float speed = 1f;
-    private final Vector2 direction = new Vector2();
-
-
+    private Body body;
+    private Arena arena;
 
 
     public Enemy(float x, float y) {
 
-        this.x = x;
-
-        this.y = y;
-
     }
-
-    public Vector2 getDirection(){
-        return direction;
-    }
-
-    private void setDirection(float x, float y){
-        direction.set(x, y);
-    }
-
 
 
     public float getX() {
 
-        return x;
+        return body.getPosition().x;
 
     }
 
     public float getY() {
 
-        return y;
+        return body.getPosition().y;
 
     }
 
@@ -97,21 +80,53 @@ public class Enemy {
         this.speed = speed;
     }
 
-    public void setDirection(Vector2 direction) {
-        this.direction.set(direction);
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
 
     public void update(float delta){
         for (EnemyStrategy strategy : enemyStrategies){
             strategy.update(this, delta);
         }
+        boolean outOfBounds = false;
+        if (arena != null){
+            if (getX() < 0.5f){
+                body.getPosition().x = 0.5f;
+                outOfBounds = true;
+            }else if (getX() > arena.getWidth() - width/2f){
+                body.getPosition().x = arena.getWidth() - width/2f;
+                outOfBounds = true;
+            }
+            if (getY() < 0.5f){
+                body.getPosition().y = 0.5f;
+                outOfBounds = true;
+            }else if (getY() > arena.getHeight() - height/2f){
+                body.getPosition().y = arena.getHeight() - height/2f;
+                outOfBounds = true;
+            }
+
+            if (outOfBounds){
+                body.setLinearVelocity(0, 0);
+                body.setAngularVelocity(0);
+                body.setTransform(body.getPosition(), 0);
+            }
+
+
+        }
+    }
+
+    public void setBody(Body body) {
+        this.body = body;
+    }
+
+    public Body getBody() {
+        return body;
+    }
+
+    public void setArena(Arena arena) {
+        this.arena = arena;
+    }
+
+    public void interactWith(Droid droid) {
+        droid.reduceHealthPoints(1);
+        body.setLinearVelocity(0, 0);
+        System.out.println(droid.getHealthPoints());
     }
 }

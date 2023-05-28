@@ -44,14 +44,11 @@ public class DroidController extends InputListener {
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
         touchPos.set(x, y);
-        System.out.println("here");
-        System.out.println(event.getTarget());
         if (event.getTarget() instanceof ArenaActor arenaActor){
             Arena arena = arenaActor.getArena();
             onArenaTouched(arena, x, y);
             return true;
         } else  if (event.getTarget() instanceof DroidActor droidActor){
-            System.out.println("here 2");
             Droid droid = droidActor.getDroid();
             onDroidTouched(droid);
             return true;
@@ -112,7 +109,7 @@ public class DroidController extends InputListener {
         int targetY = (int)y;
         for (Droid droid : droidRepository.findAll()){
             if (droid.isSelected){
-                droid.setTarget(targetX, targetY);
+                droid.setTarget(targetX+0.5f, targetY+0.5f);
             }
         }
     }

@@ -60,7 +60,9 @@ public class Arena {
     }
 
     public void addEnemy(Enemy enemy) {
+
         enemies.add(enemy);
+        enemy.setArena(this);
     }
 
     public void addObstacle(Obstacle obstacle) {

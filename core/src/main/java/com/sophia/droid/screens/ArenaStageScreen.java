@@ -3,6 +3,9 @@ package com.sophia.droid.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -32,8 +35,10 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     private EnemyController enemyController;
 
     private OrthoCamController camController;
-    private CollisionManager collisionManager;
+    //private CollisionManager collisionManager;
 
+    public World world;
+    private Box2DDebugRenderer debugRenderer;
 
 
     public ArenaStageScreen(DroidGame game) {
@@ -46,15 +51,17 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         mainStage = new Stage(new FillViewport(20f, 20f));
         uiStage = new Stage();
 
+        world = new World(new Vector2(0,0), true);
+        debugRenderer = new Box2DDebugRenderer();
 
-        collisionManager = new CollisionManager(droidRepository, enemyRepository, obstacleRepository);
+        //collisionManager = new CollisionManager(droidRepository, enemyRepository, obstacleRepository);
 
         droidController = new DroidController(droidRepository, uiStage, mainStage);
         enemyController = new EnemyController(enemyRepository, uiStage, mainStage);
         camController = new OrthoCamController((OrthographicCamera) mainStage.getCamera());
 
         ArenaGenerator arenaGenerator = new ArenaGenerator(droidRepository, enemyRepository, obstacleRepository);
-        arena = arenaGenerator.generateSimpleArena();
+        arena = arenaGenerator.generateSimpleArena(world);
 
         setupMainStage();
         setupUIStage();
@@ -65,7 +72,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         im.addProcessor(camController);
         Gdx.input.setInputProcessor(im);
 
-        mainStage.setDebugAll(true);
+//        mainStage.setDebugAll(true);
 
     }
 
@@ -105,7 +112,8 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
 
     @Override
     public void render(float delta) {
-        collisionManager.update(delta);
+
+        //collisionManager.update(delta);
         droidController.update(delta);
         enemyController.update(delta);
 
@@ -114,6 +122,9 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         ScreenUtils.clear(Color.BLACK);
         mainStage.draw();
         uiStage.draw();
+
+        debugRenderer.render(world, mainStage.getCamera().combined);
+        world.step(1/60f, 6, 2);
 
 
     }

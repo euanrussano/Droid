@@ -2,18 +2,19 @@ package com.sophia.droid.model;
 
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 
 
 import java.util.ArrayList;
 
 public class Droid {
 
-    private float x;
-    private float y;
+//    private float x;
+//    private float y;
     public boolean isSelected = false;
     private float speed = 10f;
 
-    private float rotation = 0f;
+//    private float rotation = 0f;
 
     private float damage = 2f;
     private Arena arena;
@@ -21,34 +22,36 @@ public class Droid {
 
     private float width = 1f;
     private float height = 1f;
-    private final Vector2 direction = new Vector2();
+//    private final Vector2 direction = new Vector2();
     private final ArrayList<DroidStrategy> droidStrategies = new ArrayList<>();
-
+    private Body body;
+    private int healthPoints = 1;
+    private boolean isDead = false;
 
 
     public float getX() {
 
-        return x;
+        return body.getPosition().x;
 
     }
 
-    public void setX(float x) {
-
-        this.x = x;
-
-    }
+//    public void setX(float x) {
+//
+//        this.x = x;
+//
+//    }
 
     public float getY() {
 
-        return y;
+        return body.getPosition().y;
 
     }
 
-    public void setY(float y) {
-
-        this.y = y;
-
-    }
+//    public void setY(float y) {
+//
+//        this.y = y;
+//
+//    }
 
     public float getSpeed() {
 
@@ -62,17 +65,17 @@ public class Droid {
 
     }
 
-    public float getRotation() {
-
-        return rotation;
-
-    }
-
-    public void setRotation(float rotation) {
-
-        this.rotation = rotation;
-
-    }
+//    public float getRotation() {
+//
+//        return rotation;
+//
+//    }
+//
+//    public void setRotation(float rotation) {
+//
+//        this.rotation = rotation;
+//
+//    }
 
     public float getDamage() {
 
@@ -94,11 +97,11 @@ public class Droid {
         this.arena = arena;
     }
 
-    public void setTarget(int targetX, int targetY) {
+    public void setTarget(float targetX, float targetY) {
 
         this.target = new Vector2(targetX, targetY);
         // TODO(remove the line below later - wrong location to do this!)
-        this.direction.set(this.target.cpy().sub(x, y).nor());
+//        this.direction.set(this.target.cpy().sub(body.getPosition()).nor());
 
     }
 
@@ -122,13 +125,13 @@ public class Droid {
         return height;
     }
 
-    public void setDirection(Vector2 direction) {
-        this.direction.set(direction);
-    }
-
-    public Vector2 getDirection() {
-        return direction.cpy();
-    }
+//    public void setDirection(Vector2 direction) {
+//        this.direction.set(direction);
+//    }
+//
+//    public Vector2 getDirection() {
+//        return direction.cpy();
+//    }
 
     public boolean removeDroidStrategy(Class<? extends DroidStrategy> droidStrategyClass) {
         for (DroidStrategy strategy : droidStrategies){
@@ -152,5 +155,24 @@ public class Droid {
         for (DroidStrategy droidStrategy : droidStrategies){
             droidStrategy.update(this, delta);
         }
+    }
+
+    public void setBody(Body body) {
+        this.body = body;
+    }
+
+    public Body getBody() {
+        return body;
+    }
+
+    public void reduceHealthPoints(int points) {
+        this.healthPoints -= 1;
+        if (healthPoints <= 0){
+            isDead = true;
+        }
+    }
+
+    public int getHealthPoints() {
+        return healthPoints;
     }
 }

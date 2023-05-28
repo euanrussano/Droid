@@ -16,21 +16,21 @@ public class EnemyActor extends Actor {
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
 
-        setBounds(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
+        setBounds(enemy.getX()-0.5f, enemy.getY()-0.5f, enemy.getWidth(), enemy.getHeight());
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        setBounds(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
+        setBounds(enemy.getX()-0.5f, enemy.getY()-0.5f, enemy.getWidth(), enemy.getHeight());
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
         // render the enemy
-        float x = enemy.getX();
-        float y = enemy.getY();
+        float x = getX();
+        float y = getY();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.RED);
         shapeRenderer.circle(x + enemy.getWidth()/2f, y + enemy.getHeight()/2f, enemy.getWidth()/2f, 10);

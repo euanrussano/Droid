@@ -17,21 +17,21 @@ public class DroidActor extends Actor {
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
 
-        setBounds(droid.getX(), droid.getY(), droid.getWidth(), droid.getHeight());
+        setBounds(droid.getX()-0.5f, droid.getY()-0.5f, droid.getWidth(), droid.getHeight());
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        setBounds(droid.getX(), droid.getY(), droid.getWidth(), droid.getHeight());
+        setBounds(droid.getX()-0.5f, droid.getY()-0.5f, droid.getWidth(), droid.getHeight());
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
         // render the droid
-        float x = droid.getX();
-        float y = droid.getY();
+        float x = getX();
+        float y = getY();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.GREEN);
         shapeRenderer.circle(x+0.5f, y+0.5f, droid.getWidth()/2f, 10);

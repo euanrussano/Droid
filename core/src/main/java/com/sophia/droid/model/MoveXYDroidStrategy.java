@@ -13,11 +13,13 @@ public class MoveXYDroidStrategy implements DroidStrategy{
             // move in the Y direction
             direction.x = 0;
             direction.y = 0;
-            if (Math.abs(droid.getX() - droid.getTarget().x) < 0.05f){
-                droid.setX(droid.getTarget().x);
-                if ((Math.abs(droid.getY() - droid.getTarget().y) < 0.05f)){
-                    droid.setY(droid.getTarget().y);
-                    droid.removeTarget();
+            if (Math.abs(droid.getX() - droid.getTarget().x) < 0.1f){
+                //droid.setX(droid.getTarget().x);
+                droid.getBody().setTransform(new Vector2(droid.getTarget().x, droid.getY()), 0);
+                if ((Math.abs(droid.getY() - droid.getTarget().y) < 0.1f)){
+                    droid.getBody().setTransform(new Vector2(droid.getTarget().x, droid.getTarget().y), 0);
+                    droid.getBody().setLinearVelocity(0, 0);
+                    return;
                 } else if (droid.getY() > droid.getTarget().y){
                     direction.y = -1;
                 }else if (droid.getY() < droid.getTarget().y){
@@ -29,10 +31,11 @@ public class MoveXYDroidStrategy implements DroidStrategy{
                 direction.x = 1;
             }
 
-            droid.setDirection(direction);
-            droid.setX(droid.getX() + delta*droid.getDirection().x*droid.getSpeed());
-            droid.setY(droid.getY() + delta*droid.getDirection().y*droid.getSpeed());
-
+//            droid.setDirection(direction);
+//            droid.setX(droid.getX() + delta*droid.getDirection().x*droid.getSpeed());
+//            droid.setY(droid.getY() + delta*droid.getDirection().y*droid.getSpeed());
+            droid.getBody().setLinearVelocity(direction.x*droid.getSpeed(), direction.y*droid.getSpeed());
+            droid.getBody().setAngularVelocity(0);
         }
 
     }

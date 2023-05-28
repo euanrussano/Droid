@@ -16,18 +16,20 @@ public class MoveStraightDroidStrategy implements DroidStrategy{
             distanceFromTarget.set(droid.getTarget().x, droid.getTarget().y).sub(droid.getX(), droid.getY());
             direction.set(distanceFromTarget.x, distanceFromTarget.y).nor();
             movingDistance.set(direction.x, direction.y).scl(droid.getSpeed()*delta);
-            droid.setDirection(direction);
+//            droid.setDirection(direction);
 
             // check if the vector distance is smaller than the speed*delta*direction,
             // if yes, directly moves the droid to the target
             // otherwise, do a regular move
             if(distanceFromTarget.len() < movingDistance.len()){
-                droid.setX(droid.getTarget().x);
-                droid.setY(droid.getTarget().y);
-                droid.removeTarget();
+//                droid.setX(droid.getTarget().x);
+//                droid.setY(droid.getTarget().y);
+                droid.getBody().setLinearVelocity(0 ,0);
+                droid.getBody().setTransform(new Vector2(droid.getTarget().x, droid.getTarget().y), 0);
             }else {
-                droid.setX(droid.getX() + movingDistance.x);
-                droid.setY(droid.getY() + movingDistance.y);
+//                droid.setX(droid.getX() + movingDistance.x);
+//                droid.setY(droid.getY() + movingDistance.y);
+                droid.getBody().setLinearVelocity(droid.getSpeed()*direction.x, droid.getSpeed()*direction.y);
             }
         }
 
