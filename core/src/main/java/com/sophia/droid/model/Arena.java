@@ -2,7 +2,6 @@ package com.sophia.droid.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Arena {
 
@@ -24,6 +23,7 @@ public class Arena {
 
     private List<Enemy>  enemies = new ArrayList<Enemy>();
     private List<Droid>  droids = new ArrayList<Droid>();
+    private List<Coin>  coins = new ArrayList<Coin>();
 
 
 
@@ -67,5 +67,18 @@ public class Arena {
 
     public void addObstacle(Obstacle obstacle) {
         obstacles.add(obstacle);
+    }
+
+    public void addCoin(Coin coin) {
+        coins.add(coin);
+        coin.setArena(this);
+    }
+
+    public List<Coin> getCoins() {
+        return coins;
+    }
+
+    public void removeCoin(Coin coin) {
+        coins.remove(coin);
     }
 }

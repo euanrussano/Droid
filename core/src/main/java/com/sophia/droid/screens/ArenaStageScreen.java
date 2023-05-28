@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,10 +12,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.sophia.droid.DroidGame;
 import com.sophia.droid.actor.*;
-import com.sophia.droid.controller.CollisionManager;
-import com.sophia.droid.controller.DroidController;
-import com.sophia.droid.controller.EnemyController;
-import com.sophia.droid.controller.OrthoCamController;
+import com.sophia.droid.controller.*;
 import com.sophia.droid.model.*;
 import com.sophia.droid.repository.DroidRepository;
 import com.sophia.droid.repository.EnemyRepository;
@@ -39,6 +37,9 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
 
     public World world;
     private Box2DDebugRenderer debugRenderer;
+    private EnemyDroidContactListener enemyDroidContactListener;
+    private boolean isPaused = true;
+    private boolean win = false;
 
 
     public ArenaStageScreen(DroidGame game) {
@@ -52,6 +53,8 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         uiStage = new Stage();
 
         world = new World(new Vector2(0,0), true);
+        enemyDroidContactListener = new EnemyDroidContactListener();
+        world.setContactListener(enemyDroidContactListener);
         debugRenderer = new Box2DDebugRenderer();
 
         //collisionManager = new CollisionManager(droidRepository, enemyRepository, obstacleRepository);
@@ -73,6 +76,8 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         Gdx.input.setInputProcessor(im);
 
 //        mainStage.setDebugAll(true);
+
+        isPaused = false;
 
     }
 
@@ -105,6 +110,11 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
             mainStage.addActor(obstacleActor);
         }
 
+        for (Coin coin : arena.getCoins()){
+            CoinActor coinActor = new CoinActor(coin);
+            mainStage.addActor(coinActor);
+        }
+
         SelectionActor selectionActor = new SelectionActor();
 
         mainStage.addActor(selectionActor);
@@ -113,10 +123,6 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     @Override
     public void render(float delta) {
 
-        //collisionManager.update(delta);
-        droidController.update(delta);
-        enemyController.update(delta);
-
         uiStage.act(delta);
         mainStage.act(delta);
         ScreenUtils.clear(Color.BLACK);
@@ -124,7 +130,26 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         uiStage.draw();
 
         debugRenderer.render(world, mainStage.getCamera().combined);
-        world.step(1/60f, 6, 2);
+
+        if(!isPaused){
+            //collisionManager.update(delta);
+            droidController.update(delta);
+            enemyController.update(delta);
+            world.step(1/60f, 6, 2);
+
+            // remove the bodies scheduled
+            for (Body body : enemyDroidContactListener.getBodies()){
+                world.destroyBody(body);
+            }
+            enemyDroidContactListener.clearBodiesForRemoval();
+        }
+
+
+        if (arena.getCoins().size() == 0){
+            isPaused = true;
+            win = true;
+            System.out.println("win");
+        }
 
 
     }
@@ -137,11 +162,12 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
 
     @Override
     public void pause() {
-
+        isPaused = true;
     }
 
     @Override
     public void resume() {
+        isPaused = false;
 
     }
 
@@ -176,6 +202,8 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
                 im.addProcessor(mainStage);
             }
 
+        } else if (keycode == Input.Keys.SPACE){
+            isPaused = !isPaused;
         }
         return false;
     }

@@ -27,6 +27,7 @@ public class Droid {
     private Body body;
     private int healthPoints = 1;
     private boolean isDead = false;
+    private int coins = 0;
 
 
     public float getX() {
@@ -174,5 +175,10 @@ public class Droid {
 
     public int getHealthPoints() {
         return healthPoints;
+    }
+
+    public void interactWith(Coin coin) {
+        coins += 1;
+        coin.getArena().removeCoin(coin);
     }
 }
