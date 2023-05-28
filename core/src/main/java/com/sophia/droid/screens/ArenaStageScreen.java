@@ -40,6 +40,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     private EnemyDroidContactListener enemyDroidContactListener;
     private boolean isPaused = true;
     private boolean win = false;
+    private boolean gameOver = false;
 
 
     public ArenaStageScreen(DroidGame game) {
@@ -144,12 +145,17 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
             enemyDroidContactListener.clearBodiesForRemoval();
         }
 
+        if (arena.getDroids().size() == 0){
+            gameOver = true;
+        }
 
-        if (arena.getCoins().size() == 0){
+        if (!gameOver & (arena.getCoins().size() == 0)){
             isPaused = true;
             win = true;
-            System.out.println("win");
         }
+
+
+
 
 
     }

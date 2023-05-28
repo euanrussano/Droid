@@ -25,8 +25,7 @@ public class Droid {
 //    private final Vector2 direction = new Vector2();
     private final ArrayList<DroidStrategy> droidStrategies = new ArrayList<>();
     private Body body;
-    private int healthPoints = 1;
-    private boolean isDead = false;
+    private int healthPoints = 5;
     private int coins = 0;
 
 
@@ -168,9 +167,6 @@ public class Droid {
 
     public void reduceHealthPoints(int points) {
         this.healthPoints -= 1;
-        if (healthPoints <= 0){
-            isDead = true;
-        }
     }
 
     public int getHealthPoints() {

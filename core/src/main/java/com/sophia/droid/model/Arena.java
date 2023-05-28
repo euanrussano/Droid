@@ -81,4 +81,12 @@ public class Arena {
     public void removeCoin(Coin coin) {
         coins.remove(coin);
     }
+
+    public List<Droid> getDroids() {
+        return droids;
+    }
+
+    public void removeDroid(Droid droid) {
+        droids.remove(droid);
+    }
 }

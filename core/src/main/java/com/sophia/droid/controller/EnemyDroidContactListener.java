@@ -17,6 +17,10 @@ public class EnemyDroidContactListener implements ContactListener {
             if (contact.getFixtureA().getBody().getUserData() instanceof Droid droid){
                 enemy.interactWith(droid);
                 contact.setEnabled(false);
+                if (droid.getHealthPoints() <= 0){
+                    droid.getArena().removeDroid(droid);
+                    bodiesForRemoval.add(droid.getBody());
+                }
             }
         } else if(contact.getFixtureA().getBody().getUserData() instanceof Droid droid){
             if (contact.getFixtureB().getBody().getUserData() instanceof Coin coin) {
@@ -25,6 +29,8 @@ public class EnemyDroidContactListener implements ContactListener {
                 bodiesForRemoval.add(coin.getBody());
             }
         }
+
+
 
     }
 

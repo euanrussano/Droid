@@ -24,6 +24,9 @@ public class DroidActor extends Actor {
     public void act(float delta) {
         super.act(delta);
         setBounds(droid.getX()-0.5f, droid.getY()-0.5f, droid.getWidth(), droid.getHeight());
+        if (droid.getBody().getFixtureList().isEmpty()){
+            remove();
+        }
     }
 
     @Override
