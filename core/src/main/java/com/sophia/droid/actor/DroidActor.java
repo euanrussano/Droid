@@ -29,7 +29,7 @@ public class DroidActor extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        this.droidView.render(batch, parentAlpha, getX(), getY(), getWidth(), getHeight(), droid.isSelected);
+        this.droidView.render(batch, parentAlpha, droid);
     }
 
     public Droid getDroid() {

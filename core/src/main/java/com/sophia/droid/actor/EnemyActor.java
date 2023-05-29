@@ -27,7 +27,7 @@ public class EnemyActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        enemyView.draw(batch, parentAlpha, getX(), getY(), getWidth(), getHeight());
+        enemyView.draw(batch, parentAlpha, enemy);
 
 
     }

@@ -110,6 +110,7 @@ public class DroidController extends InputListener {
         for (Droid droid : droidRepository.findAll()){
             if (droid.isSelected){
                 droid.setTarget(targetX+0.5f, targetY+0.5f);
+                droid.getBody().setAngularVelocity(0f);
             }
         }
     }

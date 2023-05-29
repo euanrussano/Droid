@@ -29,8 +29,8 @@ public class ArenaGenerator {
         // use a boolean grid to mark the occupied locations
         boolean[][] occupied = new boolean[arena.getHeight()][arena.getWidth()];
 
-        DroidStrategy moveStrategy = new MoveStraightDroidStrategy();
-        //DroidStrategy moveStrategy = new MoveXYDroidStrategy();
+//        DroidStrategy moveStrategy = new MoveStraightDroidStrategy();
+        DroidStrategy moveStrategy = new MoveXYDroidStrategy();
 
         // create two droids
         Droid droid = new Droid();
@@ -60,7 +60,7 @@ public class ArenaGenerator {
 
             // Create our fixture and attach it to the body
             Fixture fixture = body.createFixture(fixtureDef);
-            body.setFixedRotation(true);
+            //body.setFixedRotation(true);
             droid.setBody(body);
             polygonShape.dispose();
         }
@@ -159,7 +159,7 @@ public class ArenaGenerator {
 
             // Create our fixture and attach it to the body
             Fixture fixture = body.createFixture(fixtureDef);
-            body.setFixedRotation(true);
+            //body.setFixedRotation(true);
 
             enemy.setBody(body);
 

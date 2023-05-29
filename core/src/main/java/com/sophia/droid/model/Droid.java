@@ -12,7 +12,7 @@ public class Droid {
 //    private float x;
 //    private float y;
     public boolean isSelected = false;
-    private float speed = 10f;
+    private float speed = 2f;
 
 //    private float rotation = 0f;
 
@@ -25,7 +25,7 @@ public class Droid {
 //    private final Vector2 direction = new Vector2();
     private final ArrayList<DroidStrategy> droidStrategies = new ArrayList<>();
     private Body body;
-    private int healthPoints = 5;
+    private int healthPoints = 100;
     private int coins = 0;
 
 

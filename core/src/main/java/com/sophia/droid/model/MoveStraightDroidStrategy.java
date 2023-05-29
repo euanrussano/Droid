@@ -30,6 +30,7 @@ public class MoveStraightDroidStrategy implements DroidStrategy{
 //                droid.setX(droid.getX() + movingDistance.x);
 //                droid.setY(droid.getY() + movingDistance.y);
                 droid.getBody().setLinearVelocity(droid.getSpeed()*direction.x, droid.getSpeed()*direction.y);
+                droid.getBody().setTransform(droid.getBody().getPosition(), direction.angleRad());
             }
         }
 

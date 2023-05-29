@@ -142,7 +142,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         mainStage.draw();
         //uiStage.draw();
 
-        //debugRenderer.render(world, mainStage.getCamera().combined);
+        debugRenderer.render(world, mainStage.getCamera().combined);
 
         if(!isPaused){
             //collisionManager.update(delta);

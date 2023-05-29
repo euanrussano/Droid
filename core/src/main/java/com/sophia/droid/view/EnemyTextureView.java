@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.sophia.droid.model.Enemy;
 
 public class EnemyTextureView implements EnemyView{
 
@@ -16,9 +17,14 @@ public class EnemyTextureView implements EnemyView{
     }
 
     @Override
-    public void draw(Batch batch, float parentAlpha, float x, float y, float width, float height) {
-        batch.draw(region, x, y, 0, 0,
-                width, height, 1, 1, 0);
+    public void draw(Batch batch, float parentAlpha, Enemy enemy) {
+        float rotation = enemy.getBody().getLinearVelocity().angleDeg()+90;
+        float x = enemy.getX();
+        float y = enemy.getY();
+        float width = enemy.getWidth();
+        float height = enemy.getHeight();
+        batch.draw(region, x-0.5f, y-0.5f, 0.5f, 0.5f,
+                width, height, 1, 1, rotation);
 
     }
 }

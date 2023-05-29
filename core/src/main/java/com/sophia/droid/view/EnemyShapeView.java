@@ -3,6 +3,7 @@ package com.sophia.droid.view;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.sophia.droid.model.Enemy;
 
 public class EnemyShapeView implements EnemyView{
 
@@ -14,7 +15,11 @@ public class EnemyShapeView implements EnemyView{
     }
 
     @Override
-    public void draw(Batch batch, float parentAlpha, float x, float y, float width, float height) {
+    public void draw(Batch batch, float parentAlpha, Enemy enemy) {
+        float x = enemy.getX();
+        float y = enemy.getY();
+        float width = enemy.getWidth();
+        float height = enemy.getHeight();
         batch.end();
 
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());

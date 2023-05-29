@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.sophia.droid.model.Droid;
 
 public class DroidTextureView implements DroidView{
 
@@ -21,18 +22,22 @@ public class DroidTextureView implements DroidView{
     }
 
     @Override
-    public void render(Batch batch, float parentAlpha, float x, float y, float width, float height, boolean isSelected) {
-        batch.draw(region, x, y, 0, 0,
-                width, height, 1, 1, 0);
+    public void render(Batch batch, float parentAlpha, Droid droid) {
+        float x = droid.getX();
+        float y = droid.getY();
+        float rotation = droid.getBody().getLinearVelocity().angleDeg()+90;
 
-        if (isSelected) {
+        batch.draw(region, x-0.5f, y-0.5f, 0.5f, 0.5f,
+                droid.getWidth(), droid.getHeight(), 1, 1, rotation);
+
+        if (droid.isSelected) {
             batch.end();
             shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
             // render the selection point
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
                 shapeRenderer.setColor(Color.BROWN);
-                shapeRenderer.rect(x +0.4f, y +0.4f, 0.2f, 0.2f);
+                shapeRenderer.rect(x -0.1f, y -0.1f, 0.2f, 0.2f);
 
             shapeRenderer.end();
             batch.begin();
