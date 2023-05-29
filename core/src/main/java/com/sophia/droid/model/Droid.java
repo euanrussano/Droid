@@ -100,8 +100,6 @@ public class Droid {
     public void setTarget(float targetX, float targetY) {
 
         this.target = new Vector2(targetX, targetY);
-        // TODO(remove the line below later - wrong location to do this!)
-//        this.direction.set(this.target.cpy().sub(body.getPosition()).nor());
 
     }
 
