@@ -17,11 +17,15 @@ public class SelectionActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        batch.end();
+
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
         // render the grid
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.rect(getX(), getY(), getWidth(), getHeight());
         shapeRenderer.end();
+
+        batch.begin();
     }
 }

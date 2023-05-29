@@ -5,16 +5,16 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.sophia.droid.model.Enemy;
+import com.sophia.droid.view.EnemyView;
 
 public class EnemyActor extends Actor {
 
-    private final ShapeRenderer shapeRenderer;
     private final Enemy enemy;
+    private final EnemyView enemyView;
 
-    public EnemyActor(Enemy enemy) {
+    public EnemyActor(Enemy enemy, EnemyView enemyView) {
         this.enemy = enemy;
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setAutoShapeType(true);
+        this.enemyView = enemyView;
 
         setBounds(enemy.getX()-0.5f, enemy.getY()-0.5f, enemy.getWidth(), enemy.getHeight());
     }
@@ -27,16 +27,10 @@ public class EnemyActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-        // render the enemy
-        float x = getX();
-        float y = getY();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.circle(x + enemy.getWidth()/2f, y + enemy.getHeight()/2f, enemy.getWidth()/2f, 10);
-        shapeRenderer.end();
+        enemyView.draw(batch, parentAlpha, getX(), getY(), getWidth(), getHeight());
+
 
     }
 
-   
+
 }

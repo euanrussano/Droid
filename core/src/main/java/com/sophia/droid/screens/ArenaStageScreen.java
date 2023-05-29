@@ -3,6 +3,8 @@ package com.sophia.droid.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -18,6 +20,7 @@ import com.sophia.droid.repository.DroidRepository;
 import com.sophia.droid.repository.EnemyRepository;
 import com.sophia.droid.repository.ObstacleRepository;
 import com.sophia.droid.service.ArenaGenerator;
+import com.sophia.droid.view.*;
 
 public class ArenaStageScreen extends InputAdapter implements Screen {
 
@@ -41,6 +44,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     private boolean isPaused = true;
     private boolean win = false;
     private boolean gameOver = false;
+    private TextureRegion region;
 
 
     public ArenaStageScreen(DroidGame game) {
@@ -91,28 +95,36 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     private void setupMainStage() {
         mainStage.getCamera().position.set(7, 5, 0);
 
-        ArenaActor arenaActor = new ArenaActor(arena);
+        DroidView droidView = new DroidTextureView();
+        ArenaView arenaView = new ArenaTextureView();
+        EnemyView enemyView = new EnemyTextureView();
+        ObstacleView obstacleView = new ObstacleTextureView();
+        CoinView coinView = new CoinTextureView();
+
+
+        ArenaActor arenaActor = new ArenaActor(arena, arenaView);
         arenaActor.addListener(droidController);
         mainStage.addActor(arenaActor);
 
+
         for (Droid droid : droidRepository.findAll()){
-            DroidActor droidActor = new DroidActor(droid);
+            DroidActor droidActor = new DroidActor(droid, droidView);
             droidActor.addListener(droidController);
             mainStage.addActor(droidActor);
         }
 
         for (Enemy enemy : arena.getEnemies()){
-            EnemyActor enemyActor = new EnemyActor(enemy);
+            EnemyActor enemyActor = new EnemyActor(enemy, enemyView);
             mainStage.addActor(enemyActor);
         }
 
         for (Obstacle obstacle : arena.getObstacles()){
-            ObstacleActor obstacleActor = new ObstacleActor(obstacle);
+            ObstacleActor obstacleActor = new ObstacleActor(obstacle, obstacleView);
             mainStage.addActor(obstacleActor);
         }
 
         for (Coin coin : arena.getCoins()){
-            CoinActor coinActor = new CoinActor(coin);
+            CoinActor coinActor = new CoinActor(coin, coinView);
             mainStage.addActor(coinActor);
         }
 
@@ -124,13 +136,13 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     @Override
     public void render(float delta) {
 
-        uiStage.act(delta);
+        //uiStage.act(delta);
         mainStage.act(delta);
         ScreenUtils.clear(Color.BLACK);
         mainStage.draw();
-        uiStage.draw();
+        //uiStage.draw();
 
-        debugRenderer.render(world, mainStage.getCamera().combined);
+        //debugRenderer.render(world, mainStage.getCamera().combined);
 
         if(!isPaused){
             //collisionManager.update(delta);

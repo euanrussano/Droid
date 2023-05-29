@@ -6,34 +6,24 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.sophia.droid.model.Arena;
+import com.sophia.droid.view.ArenaView;
 
 public class ArenaActor extends Group {
     private final Arena arena;
-    private final ShapeRenderer shapeRenderer;
 
-    public ArenaActor(Arena arena) {
+    private final ArenaView arenaView;
+
+    public ArenaActor(Arena arena, ArenaView arenaView) {
         this.arena = arena;
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setAutoShapeType(true);
+        this.arenaView = arenaView;
 
         setBounds(0, 0, arena.getWidth(), arena.getHeight());
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-        // render the grid
-        shapeRenderer.setColor(Color.FOREST);
-        shapeRenderer.begin();
-        for (int i = 0; i <= arena.getWidth(); i++) {
-            shapeRenderer.line(i, 0, i , arena.getHeight());
+        arenaView.draw(batch, parentAlpha, getX(), getY(), getWidth(), getHeight());
 
-        }
-        for (int i = 0; i <= arena.getHeight(); i++) {
-            shapeRenderer.line(0, i, arena.getWidth(), i);
-        }
-        shapeRenderer.end();
-        super.draw(batch, parentAlpha);
     }
 
     public Arena getArena() {

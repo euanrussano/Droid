@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.sophia.droid.screens.ArenaStageScreen;
 import com.sophia.droid.screens.MainMenuScreen;
+import com.sophia.droid.screens.TestScreen;
 //import com.sophia.droid.controller.ArenaController;
 
 public class DroidGame extends Game implements InputProcessor {
@@ -42,7 +43,9 @@ public class DroidGame extends Game implements InputProcessor {
 	}
 
 	public void newGame(){
+
 		setScreen(new ArenaStageScreen(this));
+//		setScreen(new TestScreen(this));
 	}
 
 	@Override
