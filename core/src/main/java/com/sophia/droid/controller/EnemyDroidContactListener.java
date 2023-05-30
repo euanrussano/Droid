@@ -1,7 +1,7 @@
 package com.sophia.droid.controller;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.sophia.droid.model.Coin;
+import com.sophia.droid.model.Box;
 import com.sophia.droid.model.Droid;
 import com.sophia.droid.model.Enemy;
 
@@ -18,15 +18,14 @@ public class EnemyDroidContactListener implements ContactListener {
                 enemy.interactWith(droid);
                 contact.setEnabled(false);
                 if (droid.getHealthPoints() <= 0){
-                    droid.getArena().removeDroid(droid);
                     bodiesForRemoval.add(droid.getBody());
                 }
             }
         } else if(contact.getFixtureA().getBody().getUserData() instanceof Droid droid){
-            if (contact.getFixtureB().getBody().getUserData() instanceof Coin coin) {
-                droid.interactWith(coin);
+            if (contact.getFixtureB().getBody().getUserData() instanceof Box box) {
+                droid.interactWith(box);
                 contact.setEnabled(false);
-                bodiesForRemoval.add(coin.getBody());
+                bodiesForRemoval.add(box.getBody());
             }
         }
 

@@ -127,6 +127,5 @@ public class Enemy {
     public void interactWith(Droid droid) {
         droid.reduceHealthPoints(1);
         body.setLinearVelocity(0, 0);
-        System.out.println(droid.getHealthPoints());
     }
 }

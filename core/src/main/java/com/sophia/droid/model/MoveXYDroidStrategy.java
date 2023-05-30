@@ -31,10 +31,7 @@ public class MoveXYDroidStrategy implements DroidStrategy{
                 direction.x = 1;
             }
 
-//            droid.setDirection(direction);
-//            droid.setX(droid.getX() + delta*droid.getDirection().x*droid.getSpeed());
-//            droid.setY(droid.getY() + delta*droid.getDirection().y*droid.getSpeed());
-            System.out.println(direction.nor().angleDeg());
+
             droid.getBody().setLinearVelocity(direction.x*droid.getSpeed(), direction.y*droid.getSpeed());
             droid.getBody().setTransform(droid.getBody().getPosition(), direction.nor().angleRad());
             droid.getBody().setAngularVelocity(0);

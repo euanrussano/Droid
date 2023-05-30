@@ -6,6 +6,8 @@ import java.util.List;
 public class Arena {
 
 
+
+
     public void setWidth(int width) {
         this.width = width;
     }
@@ -22,9 +24,8 @@ public class Arena {
     private List<Obstacle> obstacles = new ArrayList<Obstacle>();
 
     private List<Enemy>  enemies = new ArrayList<Enemy>();
-    private List<Droid>  droids = new ArrayList<Droid>();
-    private List<Coin>  coins = new ArrayList<Coin>();
-
+    private List<Box> boxes = new ArrayList<Box>();
+    private Droid droid;
 
 
     public Arena(int width, int height) {
@@ -54,11 +55,6 @@ public class Arena {
         return height;
     }
 
-    public void addDroid(Droid droid) {
-        droids.add(droid);
-        droid.setArena(this);
-    }
-
     public void addEnemy(Enemy enemy) {
 
         enemies.add(enemy);
@@ -69,24 +65,29 @@ public class Arena {
         obstacles.add(obstacle);
     }
 
-    public void addCoin(Coin coin) {
-        coins.add(coin);
-        coin.setArena(this);
+    public void addCoin(Box box) {
+        boxes.add(box);
+        box.setArena(this);
     }
 
-    public List<Coin> getCoins() {
-        return coins;
+    public List<Box> getCoins() {
+        return boxes;
     }
 
-    public void removeCoin(Coin coin) {
-        coins.remove(coin);
+    public void removeCoin(Box box) {
+        boxes.remove(box);
     }
 
-    public List<Droid> getDroids() {
-        return droids;
+    public void setDroid(Droid droid) {
+        this.droid = droid;
+        droid.setArena(this);
     }
 
-    public void removeDroid(Droid droid) {
-        droids.remove(droid);
+    public void removeDroid() {
+        droid = null;
+    }
+
+    public Droid getDroid() {
+        return droid;
     }
 }

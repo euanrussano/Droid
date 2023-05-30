@@ -11,14 +11,11 @@ import com.sophia.droid.model.Droid;
 public class DroidTextureView implements DroidView{
 
     private final TextureRegion region;
-    private final ShapeRenderer shapeRenderer;
 
     public DroidTextureView() {
         Texture texture = new Texture(Gdx.files.internal("tankBody_green_outline.png"));
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         region = new TextureRegion(texture);
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setAutoShapeType(true);
     }
 
     @Override
@@ -29,19 +26,6 @@ public class DroidTextureView implements DroidView{
 
         batch.draw(region, x-0.5f, y-0.5f, 0.5f, 0.5f,
                 droid.getWidth(), droid.getHeight(), 1, 1, rotation);
-
-        if (droid.isSelected) {
-            batch.end();
-            shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-            // render the selection point
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-                shapeRenderer.setColor(Color.BROWN);
-                shapeRenderer.rect(x -0.1f, y -0.1f, 0.2f, 0.2f);
-
-            shapeRenderer.end();
-            batch.begin();
-        }
 
     }
 }

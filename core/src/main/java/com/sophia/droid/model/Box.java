@@ -2,7 +2,7 @@ package com.sophia.droid.model;
 
 import com.badlogic.gdx.physics.box2d.Body;
 
-public class Coin {
+public class Box {
     private Body body;
     private float width = 1f;
     private float height = 1f;
