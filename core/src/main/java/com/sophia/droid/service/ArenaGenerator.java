@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class ArenaGenerator {
 
-    private static Random random = new Random(0); //System.currentTimeMillis()
+    private static Random random = new java.util.Random(0); //System.currentTimeMillis()
 
     public ArenaGenerator() {
     }
@@ -38,8 +38,8 @@ public class ArenaGenerator {
         int y = 0;
         for (int i = 0; i < 5; i++) {
             do {
-                x = random.nextInt(0, arena.getWidth());
-                y = random.nextInt(0, arena.getHeight());
+                x = random.nextInt( arena.getWidth());
+                y = random.nextInt(arena.getHeight());
             }while (occupied[y][x]);
 
             Obstacle obstacle = new Obstacle(x, y);
@@ -77,8 +77,8 @@ public class ArenaGenerator {
         }
         for (int i = 0; i < 5; i++) {
             do {
-                x = random.nextInt(0, arena.getWidth());
-                y = random.nextInt(0, arena.getHeight());
+                x = random.nextInt(arena.getWidth());
+                y = random.nextInt(arena.getHeight());
             }while (occupied[y][x]);
 
             Enemy enemy = new Enemy(x, y);
@@ -117,8 +117,8 @@ public class ArenaGenerator {
         }
         for (int i = 0; i < 5; i++) {
             do {
-                x = random.nextInt(0, arena.getWidth());
-                y = random.nextInt(0, arena.getHeight());
+                x = random.nextInt(arena.getWidth());
+                y = random.nextInt(arena.getHeight());
             }while (occupied[y][x]);
 
             Box box = new Box();
@@ -194,8 +194,8 @@ public class ArenaGenerator {
         int y = 0;
         for (int i = 0; i < 5*(arenaSize+1); i++) {
             do {
-                x = random.nextInt(0, arena.getWidth());
-                y = random.nextInt(0, arena.getHeight());
+                x = random.nextInt( arena.getWidth());
+                y = random.nextInt( arena.getHeight());
             }while (occupied[y][x]);
 
             Obstacle obstacle = new Obstacle(x, y);
@@ -233,8 +233,8 @@ public class ArenaGenerator {
         }
         for (int i = 0; i < 5*(arenaSize+1); i++) {
             do {
-                x = random.nextInt(0, arena.getWidth());
-                y = random.nextInt(0, arena.getHeight());
+                x = random.nextInt(arena.getWidth());
+                y = random.nextInt(arena.getHeight());
             }while (occupied[y][x]);
 
             Enemy enemy = new Enemy(x, y);
@@ -273,8 +273,8 @@ public class ArenaGenerator {
         }
         for (int i = 0; i < 5*(arenaSize+1); i++) {
             do {
-                x = random.nextInt(0, arena.getWidth());
-                y = random.nextInt(0, arena.getHeight());
+                x = random.nextInt(arena.getWidth());
+                y = random.nextInt(arena.getHeight());
             }while (occupied[y][x]);
 
             Box box = new Box();

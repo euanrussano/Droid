@@ -9,6 +9,7 @@ buildscript {
 		maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
 	}
 	dependencies {
+		classpath "com.android.tools.build:gradle:$androidPluginVersion"
 
 
 	}
@@ -19,13 +20,21 @@ allprojects {
 	apply plugin: 'idea'
 }
 
-configure(subprojects) {
+configure(subprojects - project(':android')) {
 	apply plugin: 'java-library'
-	sourceCompatibility = 1.16
+	sourceCompatibility = 1.8
 	compileJava {
 		options.incremental = true
 	}
 }
+
+//configure(subprojects) {
+//	apply plugin: 'java-library'
+//	sourceCompatibility = 1.16
+//	compileJava {
+//		options.incremental = true
+//	}
+//}
 
 subprojects {
 	version = '1.0.0'

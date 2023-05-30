@@ -45,7 +45,8 @@ public class DroidController extends InputListener {
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
         touchPos.set(x, y);
-        if (event.getTarget() instanceof ArenaActor arenaActor){
+        if (event.getTarget() instanceof ArenaActor){
+            ArenaActor arenaActor = (ArenaActor)event.getTarget();
             Arena arena = arenaActor.getArena();
             onArenaTouched(arena, x, y);
             return true;

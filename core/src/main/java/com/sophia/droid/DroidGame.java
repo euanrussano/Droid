@@ -33,6 +33,7 @@ public class DroidGame extends Game implements InputProcessor {
 		Texture texture = new Texture( pixmap );
 
 		BitmapFont font = new BitmapFont();
+		font.getData().scale(5);
 
 		skin = new Skin();
 		skin.add("default", font);

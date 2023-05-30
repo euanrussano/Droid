@@ -13,16 +13,20 @@ public class EnemyDroidContactListener implements ContactListener {
     private ArrayList<Body> bodiesForRemoval = new ArrayList<Body>();
     @Override
     public void beginContact(Contact contact) {
-        if (contact.getFixtureB().getBody().getUserData() instanceof Enemy enemy){
-            if (contact.getFixtureA().getBody().getUserData() instanceof Droid droid){
+        if (contact.getFixtureB().getBody().getUserData() instanceof Enemy){
+            if (contact.getFixtureA().getBody().getUserData() instanceof Droid){
+                Enemy enemy = (Enemy) contact.getFixtureB().getBody().getUserData();
+                Droid droid = (Droid)contact.getFixtureA().getBody().getUserData();
                 enemy.interactWith(droid);
                 contact.setEnabled(false);
                 if (droid.getHealthPoints() <= 0){
                     bodiesForRemoval.add(droid.getBody());
                 }
             }
-        } else if(contact.getFixtureA().getBody().getUserData() instanceof Droid droid){
-            if (contact.getFixtureB().getBody().getUserData() instanceof Box box) {
+        } else if(contact.getFixtureA().getBody().getUserData() instanceof Droid){
+            if (contact.getFixtureB().getBody().getUserData() instanceof Box) {
+                Droid droid = (Droid)contact.getFixtureA().getBody().getUserData();
+                Box box = (Box) contact.getFixtureB().getBody().getUserData();
                 droid.interactWith(box);
                 contact.setEnabled(false);
                 bodiesForRemoval.add(box.getBody());
