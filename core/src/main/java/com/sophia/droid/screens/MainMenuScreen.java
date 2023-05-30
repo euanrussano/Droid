@@ -16,6 +16,8 @@ public class MainMenuScreen implements Screen {
 
     private final DroidGame game;
     private Stage stage;
+    private Table pickArenaLayout;
+    private Table mainLayout;
 
     public MainMenuScreen(DroidGame game) {
         this.game = game;
@@ -26,6 +28,7 @@ public class MainMenuScreen implements Screen {
         System.out.println("in main menu screen");
 
         setupStage();
+        setupArenaLayout();
 
         Gdx.input.setInputProcessor(stage);
 
@@ -35,7 +38,7 @@ public class MainMenuScreen implements Screen {
 
         this.stage = new Stage();
 
-        Table mainLayout = new Table();
+        mainLayout = new Table();
         mainLayout.setFillParent(true);
         this.stage.addActor(mainLayout);
 
@@ -49,17 +52,14 @@ public class MainMenuScreen implements Screen {
         mainLayout.add(loadGame).pad(10f).row();
         mainLayout.add(exitGame).pad(10f).row();
 
-        newGame.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.newGame();
-            }
-        });
 
-        loadGame.addListener(new ClickListener(){
+        newGame.addListener(new ClickListener(){
+
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // TODO
+
+                mainLayout.remove();
+                stage.addActor(pickArenaLayout);
             }
         });
 
@@ -69,6 +69,40 @@ public class MainMenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
+    }
+
+    private void setupArenaLayout() {
+        pickArenaLayout = new Table();
+        pickArenaLayout.setFillParent(true);
+
+        TextButton smallArena = new TextButton("Small", game.skin);
+        smallArena.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int arenaSize = 0;
+                game.newGame(arenaSize);
+            }
+        });
+        TextButton mediumArena = new TextButton("Medium", game.skin);
+        mediumArena.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int arenaSize = 1;
+                game.newGame(arenaSize);
+            }
+        });
+        TextButton bigArena = new TextButton("Big", game.skin);
+        bigArena.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int arenaSize = 2;
+                game.newGame(arenaSize);
+            }
+        });
+
+        pickArenaLayout.add(smallArena).pad(10f).row();
+        pickArenaLayout.add(mediumArena).pad(10f).row();
+        pickArenaLayout.add(bigArena).pad(10f).row();
     }
 
     @Override
@@ -102,6 +136,6 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 }

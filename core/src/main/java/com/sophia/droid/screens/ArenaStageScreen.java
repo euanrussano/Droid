@@ -8,9 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.sophia.droid.DroidGame;
@@ -25,7 +29,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     private final DroidGame game;
     public Stage mainStage;
     public Stage uiStage;
-    public Arena arena;
+//    public Arena arena;
 
     private DroidController droidController;
     private EnemyController enemyController;
@@ -33,7 +37,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     private OrthoCamController camController;
     //private CollisionManager collisionManager;
 
-    public World world;
+//    public World world;
     private Box2DDebugRenderer debugRenderer;
     private EnemyDroidContactListener enemyDroidContactListener;
     private boolean isPaused = true;
@@ -52,18 +56,18 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         mainStage = new Stage(new FillViewport(20f, 20f));
         uiStage = new Stage();
 
-        world = new World(new Vector2(0,0), true);
+//        world = new World(new Vector2(0,0), true);
         enemyDroidContactListener = new EnemyDroidContactListener();
-        world.setContactListener(enemyDroidContactListener);
+        game.world.setContactListener(enemyDroidContactListener);
         debugRenderer = new Box2DDebugRenderer();
 
         //collisionManager = new CollisionManager(droidRepository, enemyRepository, obstacleRepository);
 
-        ArenaGenerator arenaGenerator = new ArenaGenerator();
-        arena = arenaGenerator.generateSimpleArena(world);
+//        ArenaGenerator arenaGenerator = new ArenaGenerator();
+//        arena = arenaGenerator.generateSimpleArena(world);
 
-        droidController = new DroidController(arena.getDroid(), uiStage, mainStage);
-        enemyController = new EnemyController(arena, uiStage, mainStage);
+        droidController = new DroidController(game.arena.getDroid(), uiStage, mainStage);
+        enemyController = new EnemyController(game.arena, uiStage, mainStage);
         camController = new OrthoCamController((OrthographicCamera) mainStage.getCamera());
 
         setupMainStage();
@@ -71,8 +75,10 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
 
         InputMultiplexer im = new InputMultiplexer();
         im.addProcessor(this);
-        im.addProcessor(uiStage);
         im.addProcessor(camController);
+        im.addProcessor(uiStage);
+        im.addProcessor(mainStage);
+
         Gdx.input.setInputProcessor(im);
 
 //        mainStage.setDebugAll(true);
@@ -101,9 +107,21 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         topBar.add(new Label("Boxes:", game.skin)).pad(10f);
         topBar.add(boxesLabel).pad(10f);
 
+        Table bottomBar = new Table();
+
+        Button pauseButton = new TextButton("Pause", game.skin);
+        pauseButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                isPaused = !isPaused;
+            }
+        });
+        bottomBar.add(pauseButton);
+
 
         mainLayout.add(topBar).growX().row();
-        mainLayout.add().expandX().expandY();
+        mainLayout.add().expandX().expandY().row();
+        mainLayout.add(bottomBar).growX();
 
 
     }
@@ -118,28 +136,28 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         CoinView coinView = new CoinTextureView();
 
 
-        ArenaActor arenaActor = new ArenaActor(arena, arenaView);
+        ArenaActor arenaActor = new ArenaActor(game.arena, arenaView);
         arenaActor.addListener(droidController);
         mainStage.addActor(arenaActor);
 
 
 
-        DroidActor droidActor = new DroidActor(arena.getDroid(), droidView);
+        DroidActor droidActor = new DroidActor(game.arena.getDroid(), droidView);
         droidActor.addListener(droidController);
         mainStage.addActor(droidActor);
 
 
-        for (Enemy enemy : arena.getEnemies()){
+        for (Enemy enemy : game.arena.getEnemies()){
             EnemyActor enemyActor = new EnemyActor(enemy, enemyView);
             mainStage.addActor(enemyActor);
         }
 
-        for (Obstacle obstacle : arena.getObstacles()){
+        for (Obstacle obstacle : game.arena.getObstacles()){
             ObstacleActor obstacleActor = new ObstacleActor(obstacle, obstacleView);
             mainStage.addActor(obstacleActor);
         }
 
-        for (Box box : arena.getCoins()){
+        for (Box box : game.arena.getCoins()){
             CoinActor coinActor = new CoinActor(box, coinView);
             mainStage.addActor(coinActor);
         }
@@ -157,7 +175,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         ScreenUtils.clear(Color.BLACK);
         mainStage.getViewport().apply();
         mainStage.draw();
-        debugRenderer.render(world, mainStage.getCamera().combined);
+        debugRenderer.render(game.world, mainStage.getCamera().combined);
         uiStage.getViewport().apply();
         uiStage.draw();
 
@@ -166,20 +184,20 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         if(!isPaused){
             droidController.update(delta);
             enemyController.update(delta);
-            world.step(1/60f, 6, 2);
+            game.world.step(1/60f, 6, 2);
 
             // remove the bodies scheduled
             for (Body body : enemyDroidContactListener.getBodies()){
-                world.destroyBody(body);
+                game.world.destroyBody(body);
             }
             enemyDroidContactListener.clearBodiesForRemoval();
         }
 
-        if (arena.getDroid() == null){
+        if (game.arena.getDroid() == null){
             gameOver = true;
         }
 
-        if (!gameOver & (arena.getCoins().size() == 0)){
+        if (!gameOver & (game.arena.getCoins().size() == 0)){
             isPaused = true;
             win = true;
         }
@@ -219,26 +237,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.P){
-            // pan mode
-            InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
-            im.removeProcessor(mainStage);
-            im.removeProcessor(uiStage);
-            if (!im.getProcessors().contains(camController, false)){
-                im.addProcessor(camController);
-            }
-        } else if (keycode == Input.Keys.S){
-            // select mode
-            InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
-            im.removeProcessor(camController);
-            if (!im.getProcessors().contains(uiStage, false)) {
-                im.addProcessor(uiStage);
-            }
-            if (!im.getProcessors().contains(mainStage, false)) {
-                im.addProcessor(mainStage);
-            }
-
-        } else if (keycode == Input.Keys.SPACE){
+        if (keycode == Input.Keys.SPACE) {
             isPaused = !isPaused;
         }
         return false;

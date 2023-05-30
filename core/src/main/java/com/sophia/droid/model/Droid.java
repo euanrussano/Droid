@@ -2,7 +2,7 @@ package com.sophia.droid.model;
 
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.*;
 
 
 import java.util.ArrayList;
@@ -20,6 +20,38 @@ public class Droid {
     private int healthPoints = 3;
     private int boxes = 0;
 
+    public Droid(World world) {
+        // First we create a body definition
+        BodyDef bodyDef = new BodyDef();
+        // We set our body to dynamic, for something like ground which doesn't move we would set it to StaticBody
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        // Set our body's starting position in the world
+        bodyDef.position.set(7.5f, 7.5f);
+
+        // Create our body in the world using our body definition
+        Body body = world.createBody(bodyDef);
+        body.setUserData(this);
+
+        // Create a circle shape and set its radius to 6
+        PolygonShape polygonShape = new PolygonShape();
+        polygonShape.setAsBox(0.5f, 0.5f);
+
+        // Create a fixture definition to apply our shape to
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygonShape;
+        fixtureDef.density = 1.0f;
+        fixtureDef.friction = 0.0f;
+        fixtureDef.restitution = 0.0f; // Make it bounce a little bit
+
+        // Create our fixture and attach it to the body
+        Fixture fixture = body.createFixture(fixtureDef);
+        //body.setFixedRotation(true);
+        setBody(body);
+
+        // Remember to dispose of any shapes after you're done with them!
+        // BodyDef and FixtureDef don't need disposing, but shapes do.
+        polygonShape.dispose();
+    }
 
     public float getX() {
 
