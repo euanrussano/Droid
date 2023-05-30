@@ -1,26 +1,15 @@
 package com.sophia.droid.service;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.sophia.droid.controller.EnemyDroidContactListener;
 import com.sophia.droid.model.*;
-import com.sophia.droid.repository.DroidRepository;
-import com.sophia.droid.repository.EnemyRepository;
-import com.sophia.droid.repository.ObstacleRepository;
 
 import java.util.Random;
 
 public class ArenaGenerator {
 
-
-    private final DroidRepository droidRepository;
-    private final EnemyRepository enemyRepository;
-    private final ObstacleRepository obstacleRepository;
     private static Random random = new Random(0); //System.currentTimeMillis()
 
-    public ArenaGenerator(DroidRepository droidRepository, EnemyRepository enemyRepository, ObstacleRepository obstacleRepository) {
-        this.droidRepository = droidRepository;
-        this.enemyRepository = enemyRepository;
-        this.obstacleRepository = obstacleRepository;
+    public ArenaGenerator() {
     }
 
     public Arena generateSimpleArena(World world) {
@@ -32,7 +21,7 @@ public class ArenaGenerator {
 //        DroidStrategy moveStrategy = new MoveStraightDroidStrategy();
         DroidStrategy moveStrategy = new MoveXYDroidStrategy();
 
-        // create two droids
+        // create droid
         Droid droid = new Droid();
         // position droid in the middle
         // First we create a body definition
@@ -70,7 +59,7 @@ public class ArenaGenerator {
         // add move strategy in first droid
         droid.addDroidStrategy(moveStrategy);
 
-        arena.addDroid(droid);
+        arena.setDroid(droid);
         occupied[7][7] = true;
 
 //        Droid droid2 = new Droid();
@@ -80,7 +69,7 @@ public class ArenaGenerator {
 //        arena.addDroid(droid2);
 //        occupied[3][3] = true;
 
-        droidRepository.save(droid);
+//        droidRepository.save(droid);
 //        droidRepository.save(droid2);
 
         EnemyStrategy pursueEnemyStrategy = new PursueDroidEnemyStrategy(droid, 3f);
@@ -125,7 +114,7 @@ public class ArenaGenerator {
 
 
             arena.addObstacle(obstacle);
-            obstacleRepository.save(obstacle);
+//            obstacleRepository.save(obstacle);
         }
         for (int i = 0; i < 5; i++) {
             do {
@@ -165,7 +154,7 @@ public class ArenaGenerator {
 
             enemy.addEnemyStrategy(pursueEnemyStrategy);
             arena.addEnemy(enemy);
-            enemyRepository.save(enemy);
+//            enemyRepository.save(enemy);
         }
         for (int i = 0; i < 5; i++) {
             do {
@@ -173,7 +162,7 @@ public class ArenaGenerator {
                 y = random.nextInt(0, arena.getHeight());
             }while (occupied[y][x]);
 
-            Coin coin = new Coin();
+            Box box = new Box();
 
             // First we create a body definition
             BodyDef bodyDef = new BodyDef();
@@ -184,7 +173,7 @@ public class ArenaGenerator {
 
             // Create our body in the world using our body definition
             Body body = world.createBody(bodyDef);
-            body.setUserData(coin);
+            body.setUserData(box);
 
             // Create a circle shape and set its radius to 6
             PolygonShape polygonShape = new PolygonShape();
@@ -201,9 +190,9 @@ public class ArenaGenerator {
             Fixture fixture = body.createFixture(fixtureDef);
             body.setFixedRotation(true);
 
-            coin.setBody(body);
+            box.setBody(body);
 
-            arena.addCoin(coin);
+            arena.addCoin(box);
         }
 
         return arena;

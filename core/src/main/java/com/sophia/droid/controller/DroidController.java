@@ -1,25 +1,18 @@
 package com.sophia.droid.controller;
 
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.sophia.droid.actor.ArenaActor;
-import com.sophia.droid.actor.DroidActor;
-import com.sophia.droid.actor.SelectionActor;
 import com.sophia.droid.model.Arena;
 import com.sophia.droid.model.Droid;
-import com.sophia.droid.model.Enemy;
-import com.sophia.droid.model.Obstacle;
-import com.sophia.droid.repository.DroidRepository;
 
 public class DroidController extends InputListener {
-    private final DroidRepository droidRepository;
+    private final Droid droid;
     private final Stage uiStage;
     private final Stage mainStage;
     private Rectangle droidBounds = new Rectangle(0, 0, 1, 1);
@@ -28,15 +21,23 @@ public class DroidController extends InputListener {
     private Vector2 dragPosUI = new Vector2();
     private boolean dragging = false;
 
-    public DroidController(DroidRepository droidRepository, Stage uiStage, Stage mainStage) {
+    private Label hpLabel;
+    private Label boxesLabel;
+
+    public DroidController(Droid droid, Stage uiStage, Stage mainStage) {
         this.uiStage = uiStage;
         this.mainStage = mainStage;
-        this.droidRepository = droidRepository;
+        this.droid = droid;
     }
 
     public void update(float delta) {
-        for (Droid droid : droidRepository.findAll()) {
-            droid.update(delta);
+        droid.update(delta);
+        if (hpLabel != null){
+
+            hpLabel.setText(droid.getHealthPoints());
+        }
+        if (boxesLabel != null){
+            boxesLabel.setText(droid.getBoxes());
         }
 
     }
@@ -48,71 +49,23 @@ public class DroidController extends InputListener {
             Arena arena = arenaActor.getArena();
             onArenaTouched(arena, x, y);
             return true;
-        } else  if (event.getTarget() instanceof DroidActor droidActor){
-            Droid droid = droidActor.getDroid();
-            onDroidTouched(droid);
-            return true;
         }
-        return true;
-    }
-
-    @Override
-    public void touchDragged(InputEvent event, float x, float y, int pointer) {
-        if (event.getStage() == mainStage){
-            dragPosUI.set(x, y);
-            SelectionActor selectionActor = (SelectionActor)mainStage.getRoot().findActor(SelectionActor.class.getSimpleName());
-            selectionActor.setPosition(touchPos.x, touchPos.y);
-            if (dragPosUI.x < touchPos.x){
-                selectionActor.setX(dragPosUI.x);
-            }
-            if (dragPosUI.y < touchPos.y){
-                selectionActor.setY(dragPosUI.y);
-            }
-            selectionActor.setSize(Math.abs(dragPosUI.x - touchPos.x), Math.abs(dragPosUI.y - touchPos.y));
-            dragging = true;
-        }
-    }
-
-    @Override
-    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-        SelectionActor selectionActor = mainStage.getRoot().findActor(SelectionActor.class.getSimpleName());
-        if (dragging & Math.abs(dragPosUI.x - touchPos.x)>0.2f){
-            objBounds.set(selectionActor.getX(), selectionActor.getY(), selectionActor.getWidth(), selectionActor.getHeight());
-            for (Droid droid : droidRepository.findAll()){
-                droid.isSelected = false;
-                droidBounds.set(droid.getX(), droid.getY(), droid.getWidth(), droid.getHeight());
-                if (objBounds.overlaps(droidBounds)){
-                    droid.isSelected = true;
-                }
-            }
-
-
-        }
-        selectionActor.setBounds(0,0,0,0);
-        dragging = false;
-        dragPosUI.set(0, 0);
-        touchPos.set(0, 0);
-
-    }
-
-    public void onDroidTouched(Droid droid) {
-        for (Droid droid2 : droidRepository.findAll()){
-            if (!droid2.equals(droid)) {
-                droid2.isSelected = false;
-            }
-        }
-        droid.isSelected = !droid.isSelected;
+        return false;
     }
 
     public void onArenaTouched(Arena arena, float x, float y) {
         int targetX = (int)x;
         int targetY = (int)y;
-        for (Droid droid : droidRepository.findAll()){
-            if (droid.isSelected){
-                droid.setTarget(targetX+0.5f, targetY+0.5f);
-                droid.getBody().setAngularVelocity(0f);
-            }
-        }
+        droid.setTarget(targetX+0.5f, targetY+0.5f);
+        droid.getBody().setAngularVelocity(0f);
+
     }
 
+    public void setHPLabel(Label label) {
+        this.hpLabel = label;
+    }
+
+    public void setBoxesLabel(Label boxesLabel) {
+        this.boxesLabel = boxesLabel;
+    }
 }

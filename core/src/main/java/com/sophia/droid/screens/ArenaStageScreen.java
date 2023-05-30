@@ -3,22 +3,20 @@ package com.sophia.droid.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.sophia.droid.DroidGame;
 import com.sophia.droid.actor.*;
 import com.sophia.droid.controller.*;
 import com.sophia.droid.model.*;
-import com.sophia.droid.repository.DroidRepository;
-import com.sophia.droid.repository.EnemyRepository;
-import com.sophia.droid.repository.ObstacleRepository;
 import com.sophia.droid.service.ArenaGenerator;
 import com.sophia.droid.view.*;
 
@@ -29,9 +27,6 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     public Stage uiStage;
     public Arena arena;
 
-    private EnemyRepository enemyRepository = new EnemyRepository();
-    private ObstacleRepository obstacleRepository = new ObstacleRepository();
-    private DroidRepository droidRepository = new DroidRepository();
     private DroidController droidController;
     private EnemyController enemyController;
 
@@ -64,12 +59,12 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
 
         //collisionManager = new CollisionManager(droidRepository, enemyRepository, obstacleRepository);
 
-        droidController = new DroidController(droidRepository, uiStage, mainStage);
-        enemyController = new EnemyController(enemyRepository, uiStage, mainStage);
-        camController = new OrthoCamController((OrthographicCamera) mainStage.getCamera());
-
-        ArenaGenerator arenaGenerator = new ArenaGenerator(droidRepository, enemyRepository, obstacleRepository);
+        ArenaGenerator arenaGenerator = new ArenaGenerator();
         arena = arenaGenerator.generateSimpleArena(world);
+
+        droidController = new DroidController(arena.getDroid(), uiStage, mainStage);
+        enemyController = new EnemyController(arena, uiStage, mainStage);
+        camController = new OrthoCamController((OrthographicCamera) mainStage.getCamera());
 
         setupMainStage();
         setupUIStage();
@@ -87,7 +82,28 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     }
 
     private void setupUIStage() {
-        //uiStage.addListener(droidController);
+
+        Table mainLayout = new Table();
+        mainLayout.setFillParent(true);
+        uiStage.addActor(mainLayout);
+
+        Table topBar = new Table();
+
+        Label droidHPLabel = new Label("0", game.skin);
+        droidController.setHPLabel(droidHPLabel);
+
+        Label boxesLabel = new Label("0", game.skin);
+        droidController.setBoxesLabel(boxesLabel);
+
+        topBar.add(new Label("HP:", game.skin)).pad(10f);
+        topBar.add(droidHPLabel).pad(10f);
+
+        topBar.add(new Label("Boxes:", game.skin)).pad(10f);
+        topBar.add(boxesLabel).pad(10f);
+
+
+        mainLayout.add(topBar).growX().row();
+        mainLayout.add().expandX().expandY();
 
 
     }
@@ -107,11 +123,11 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         mainStage.addActor(arenaActor);
 
 
-        for (Droid droid : droidRepository.findAll()){
-            DroidActor droidActor = new DroidActor(droid, droidView);
-            droidActor.addListener(droidController);
-            mainStage.addActor(droidActor);
-        }
+
+        DroidActor droidActor = new DroidActor(arena.getDroid(), droidView);
+        droidActor.addListener(droidController);
+        mainStage.addActor(droidActor);
+
 
         for (Enemy enemy : arena.getEnemies()){
             EnemyActor enemyActor = new EnemyActor(enemy, enemyView);
@@ -123,8 +139,8 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
             mainStage.addActor(obstacleActor);
         }
 
-        for (Coin coin : arena.getCoins()){
-            CoinActor coinActor = new CoinActor(coin, coinView);
+        for (Box box : arena.getCoins()){
+            CoinActor coinActor = new CoinActor(box, coinView);
             mainStage.addActor(coinActor);
         }
 
@@ -136,16 +152,18 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     @Override
     public void render(float delta) {
 
-        //uiStage.act(delta);
+        uiStage.act(delta);
         mainStage.act(delta);
         ScreenUtils.clear(Color.BLACK);
+        mainStage.getViewport().apply();
         mainStage.draw();
-        //uiStage.draw();
-
         debugRenderer.render(world, mainStage.getCamera().combined);
+        uiStage.getViewport().apply();
+        uiStage.draw();
+
+
 
         if(!isPaused){
-            //collisionManager.update(delta);
             droidController.update(delta);
             enemyController.update(delta);
             world.step(1/60f, 6, 2);
@@ -157,7 +175,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
             enemyDroidContactListener.clearBodiesForRemoval();
         }
 
-        if (arena.getDroids().size() == 0){
+        if (arena.getDroid() == null){
             gameOver = true;
         }
 

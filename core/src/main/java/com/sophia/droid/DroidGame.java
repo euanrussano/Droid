@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.sophia.droid.screens.ArenaStageScreen;
@@ -37,6 +38,9 @@ public class DroidGame extends Game implements InputProcessor {
 		skin.add("default", textButtonStyle);
 		Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
 		skin.add("default", labelStyle);
+		ProgressBar.ProgressBarStyle barStyle = new ProgressBar.ProgressBarStyle(skin.newDrawable("default", Color.DARK_GRAY), skin.newDrawable("default", Color.GREEN));
+		barStyle.knobBefore = barStyle.knob;
+		skin.add("default-horizontal", barStyle);
 
 
 		setScreen(new MainMenuScreen(this));

@@ -9,24 +9,16 @@ import java.util.ArrayList;
 
 public class Droid {
 
-//    private float x;
-//    private float y;
-    public boolean isSelected = false;
-    private float speed = 2f;
-
-//    private float rotation = 0f;
-
-    private float damage = 2f;
+    private float speed = 2f;;
     private Arena arena;
     private Vector2 target = null;
 
     private float width = 1f;
     private float height = 1f;
-//    private final Vector2 direction = new Vector2();
     private final ArrayList<DroidStrategy> droidStrategies = new ArrayList<>();
     private Body body;
-    private int healthPoints = 100;
-    private int coins = 0;
+    private int healthPoints = 3;
+    private int boxes = 0;
 
 
     public float getX() {
@@ -35,23 +27,11 @@ public class Droid {
 
     }
 
-//    public void setX(float x) {
-//
-//        this.x = x;
-//
-//    }
-
     public float getY() {
 
         return body.getPosition().y;
 
     }
-
-//    public void setY(float y) {
-//
-//        this.y = y;
-//
-//    }
 
     public float getSpeed() {
 
@@ -62,30 +42,6 @@ public class Droid {
     public void setSpeed(float speed) {
 
         this.speed = speed;
-
-    }
-
-//    public float getRotation() {
-//
-//        return rotation;
-//
-//    }
-//
-//    public void setRotation(float rotation) {
-//
-//        this.rotation = rotation;
-//
-//    }
-
-    public float getDamage() {
-
-        return damage;
-
-    }
-
-    public void setDamage(float damage) {
-
-        this.damage = damage;
 
     }
 
@@ -123,13 +79,6 @@ public class Droid {
         return height;
     }
 
-//    public void setDirection(Vector2 direction) {
-//        this.direction.set(direction);
-//    }
-//
-//    public Vector2 getDirection() {
-//        return direction.cpy();
-//    }
 
     public boolean removeDroidStrategy(Class<? extends DroidStrategy> droidStrategyClass) {
         for (DroidStrategy strategy : droidStrategies){
@@ -165,14 +114,22 @@ public class Droid {
 
     public void reduceHealthPoints(int points) {
         this.healthPoints -= 1;
+        if (this.healthPoints <= 0){
+            // if dead, remove from arena
+            arena = null;
+        }
     }
 
     public int getHealthPoints() {
         return healthPoints;
     }
 
-    public void interactWith(Coin coin) {
-        coins += 1;
-        coin.getArena().removeCoin(coin);
+    public void interactWith(Box box) {
+        boxes += 1;
+        box.getArena().removeCoin(box);
+    }
+
+    public int getBoxes() {
+        return boxes;
     }
 }

@@ -22,11 +22,6 @@ public class DroidShapeView implements DroidView {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.FOREST);
         shapeRenderer.circle(x+0.5f, y+0.5f, droid.getWidth()/2f, 10);
-        // render square on droid
-        if (droid.isSelected) {
-            shapeRenderer.setColor(Color.BROWN);
-            shapeRenderer.rect(x +0.4f, y +0.4f, 0.2f, 0.2f);
-        }
         shapeRenderer.end();
 
     }

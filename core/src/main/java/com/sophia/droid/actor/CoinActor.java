@@ -1,29 +1,26 @@
 package com.sophia.droid.actor;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.sophia.droid.model.Coin;
-import com.sophia.droid.model.Droid;
+import com.sophia.droid.model.Box;
 import com.sophia.droid.view.CoinView;
 
 public class CoinActor extends Actor {
-    private final Coin coin;
+    private final Box box;
     private final CoinView coinView;
 
-    public CoinActor(Coin coin, CoinView coinView) {
-        this.coin = coin;
+    public CoinActor(Box box, CoinView coinView) {
+        this.box = box;
         this.coinView = coinView;
 
-        setBounds(coin.getX()-0.5f, coin.getY()-0.5f, coin.getWidth(), coin.getHeight());
+        setBounds(box.getX()-0.5f, box.getY()-0.5f, box.getWidth(), box.getHeight());
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        setBounds(coin.getX()-0.5f, coin.getY()-0.5f, coin.getWidth(), coin.getHeight());
-        if (coin.getBody().getFixtureList().isEmpty()){
+        setBounds(box.getX()-0.5f, box.getY()-0.5f, box.getWidth(), box.getHeight());
+        if (box.getBody().getFixtureList().isEmpty()){
             remove();
         }
     }
