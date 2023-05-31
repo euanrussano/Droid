@@ -4,10 +4,9 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -21,7 +20,6 @@ import com.sophia.droid.DroidGame;
 import com.sophia.droid.actor.*;
 import com.sophia.droid.controller.*;
 import com.sophia.droid.model.*;
-import com.sophia.droid.service.ArenaGenerator;
 import com.sophia.droid.view.*;
 
 public class ArenaStageScreen extends InputAdapter implements Screen {
@@ -34,7 +32,8 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     private DroidController droidController;
     private EnemyController enemyController;
 
-    private OrthoCamController camController;
+    //private GestureDetector.GestureListener camGestureController;
+    //private InputProcessor camController;
     //private CollisionManager collisionManager;
 
 //    public World world;
@@ -68,14 +67,19 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
 
         droidController = new DroidController(game.arena.getDroid(), uiStage, mainStage);
         enemyController = new EnemyController(game.arena, uiStage, mainStage);
-        camController = new OrthoCamController((OrthographicCamera) mainStage.getCamera());
 
         setupMainStage();
         setupUIStage();
 
         InputMultiplexer im = new InputMultiplexer();
         im.addProcessor(this);
-        im.addProcessor(camController);
+        if (Gdx.app.getType().equals(Application.ApplicationType.Android)) {
+            GestureDetector.GestureListener camGestureController = new OrthoCamGestureController((OrthographicCamera) mainStage.getCamera());
+            im.addProcessor(new GestureDetector(camGestureController));
+        } else {
+            InputProcessor camController = new OrthoCamMouseController((OrthographicCamera) mainStage.getCamera());
+            im.addProcessor(camController);
+        }
         im.addProcessor(uiStage);
         im.addProcessor(mainStage);
 

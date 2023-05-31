@@ -16,6 +16,7 @@ import com.sophia.droid.controller.EnemyDroidContactListener;
 import com.sophia.droid.model.Arena;
 import com.sophia.droid.screens.ArenaStageScreen;
 import com.sophia.droid.screens.MainMenuScreen;
+import com.sophia.droid.screens.TestScreen;
 import com.sophia.droid.service.ArenaGenerator;
 //import com.sophia.droid.controller.ArenaController;
 
