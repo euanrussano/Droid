@@ -24,7 +24,7 @@ public class Arena {
     private List<Obstacle> obstacles = new ArrayList<Obstacle>();
 
     private List<Enemy>  enemies = new ArrayList<Enemy>();
-    private List<Box> boxes = new ArrayList<Box>();
+    private Box box;
     private Droid droid;
 
 
@@ -65,17 +65,19 @@ public class Arena {
         obstacles.add(obstacle);
     }
 
-    public void addCoin(Box box) {
-        boxes.add(box);
+    public void setBox(Box box) {
+        this.box = box;
         box.setArena(this);
     }
 
-    public List<Box> getCoins() {
-        return boxes;
+    public Box getBox() {
+        return box;
     }
 
-    public void removeCoin(Box box) {
-        boxes.remove(box);
+    public void removeBox() {
+        box.setArena(null);
+        this.box = null;
+
     }
 
     public void setDroid(Droid droid) {

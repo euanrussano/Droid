@@ -32,6 +32,7 @@ public class DroidController extends InputListener {
 
     public void update(float delta) {
         droid.update(delta);
+        mainStage.getViewport().getCamera().position.set(droid.getX(), droid.getY(), 0);
         if (hpLabel != null){
             hpLabel.setText(droid.getHealthPoints());
         }

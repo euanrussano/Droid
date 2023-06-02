@@ -8,7 +8,7 @@ import com.sophia.droid.model.Enemy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnemyDroidContactListener implements ContactListener {
+public class DroidContactListener implements ContactListener {
 
     private ArrayList<Body> bodiesForRemoval = new ArrayList<Body>();
     @Override

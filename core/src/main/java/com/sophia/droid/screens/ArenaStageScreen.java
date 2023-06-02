@@ -3,7 +3,6 @@ package com.sophia.droid.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -17,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.sophia.droid.DroidGame;
 import com.sophia.droid.actor.*;
 import com.sophia.droid.controller.*;
@@ -29,24 +27,20 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     private final DroidGame game;
     public Stage mainStage;
     public Stage uiStage;
-//    public Arena arena;
 
     private DroidController droidController;
     private EnemyController enemyController;
+    private BoxController boxController;
 
-    //private GestureDetector.GestureListener camGestureController;
-    //private InputProcessor camController;
-    //private CollisionManager collisionManager;
-
-//    public World world;
     private Box2DDebugRenderer debugRenderer;
-    private EnemyDroidContactListener enemyDroidContactListener;
+    private DroidContactListener droidContactListener;
     private boolean isPaused = true;
     private boolean win = false;
     private boolean gameOver = false;
 
     private Label gameOverLabel;
     private TextButton nextLevelButton;
+
 
 
     public ArenaStageScreen(DroidGame game) {
@@ -60,8 +54,8 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         uiStage = new Stage(new FitViewport(300, 300));
 
 //        world = new World(new Vector2(0,0), true);
-        enemyDroidContactListener = new EnemyDroidContactListener();
-        game.world.setContactListener(enemyDroidContactListener);
+        droidContactListener = new DroidContactListener();
+        game.world.setContactListener(droidContactListener);
         debugRenderer = new Box2DDebugRenderer();
 
         //collisionManager = new CollisionManager(droidRepository, enemyRepository, obstacleRepository);
@@ -71,6 +65,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
 
         droidController = new DroidController(game.arena.getDroid(), uiStage, mainStage);
         enemyController = new EnemyController(game.arena, uiStage, mainStage);
+        boxController = new BoxController(game.boxFactory, game.arena, uiStage, mainStage);
 
         setupMainStage();
         setupUIStage();
@@ -168,7 +163,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         ArenaView arenaView = new ArenaTextureView();
         EnemyView enemyView = new EnemyTextureView();
         ObstacleView obstacleView = new ObstacleTextureView();
-        CoinView coinView = new CoinTextureView();
+        BoxView boxView = new BoxTextureView();
 
 
         ArenaActor arenaActor = new ArenaActor(game.arena, arenaView);
@@ -192,14 +187,13 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
             mainStage.addActor(obstacleActor);
         }
 
-        for (Box box : game.arena.getCoins()){
-            CoinActor coinActor = new CoinActor(box, coinView);
-            mainStage.addActor(coinActor);
-        }
 
-        SelectionActor selectionActor = new SelectionActor();
+        BoxActor boxActor = new BoxActor(game.arena.getBox(), boxView);
+        mainStage.addActor(boxActor);
 
-        mainStage.addActor(selectionActor);
+//        SelectionActor selectionActor = new SelectionActor();
+//
+//        mainStage.addActor(selectionActor);
     }
 
     @Override
@@ -220,18 +214,19 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
             game.world.step(1/60f, 6, 2);
 
             // remove the bodies scheduled
-            for (Body body : enemyDroidContactListener.getBodies()){
+            for (Body body : droidContactListener.getBodies()){
                 game.world.destroyBody(body);
             }
-            enemyDroidContactListener.clearBodiesForRemoval();
+            droidContactListener.clearBodiesForRemoval();
 
             droidController.update(delta);
             enemyController.update(delta);
+            boxController.update(delta);
         }
 
         if (game.arena.getDroid().isDead){
             gameOver = true;
-        } else if (game.arena.getCoins().size() == 0){
+        } else if (game.arena.getDroid().hasMaxBoxes()){
             win = true;
         }
 
@@ -245,11 +240,6 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
             gameOverLabel.setText("You lost!");
             gameOverLabel.setVisible(true);
         }
-
-
-
-
-
 
 
     }

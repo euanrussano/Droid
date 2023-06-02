@@ -1,5 +1,6 @@
 package com.sophia.droid.service;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.sophia.droid.model.*;
 
@@ -8,8 +9,10 @@ import java.util.Random;
 public class ArenaGenerator {
 
     private static Random random = new java.util.Random(0); //System.currentTimeMillis()
+    private BoxFactory boxFactory;
 
-    public ArenaGenerator() {
+    public ArenaGenerator(BoxFactory boxFactory) {
+        this.boxFactory = boxFactory;
     }
 
     public Arena generateSimpleArena(World world) {
@@ -151,7 +154,7 @@ public class ArenaGenerator {
 
             box.setBody(body);
 
-            arena.addCoin(box);
+            arena.setBox(box);
         }
 
         return arena;
@@ -180,8 +183,8 @@ public class ArenaGenerator {
         droid.getBody().setTransform(7.5f, 7.5f, 0);
 
         // add move strategy in droid
-//        DroidStrategy moveStrategy = new MoveStraightDroidStrategy();
-        DroidStrategy moveStrategy = new MoveXYDroidStrategy();
+        DroidStrategy moveStrategy = new MoveStraightDroidStrategy();
+//        DroidStrategy moveStrategy = new MoveXYDroidStrategy();
         droid.addDroidStrategy(moveStrategy);
 
         arena.setDroid(droid);
@@ -271,44 +274,18 @@ public class ArenaGenerator {
             arena.addEnemy(enemy);
 //            enemyRepository.save(enemy);
         }
-        for (int i = 0; i < 1*(arenaSize+1); i++) {
-            do {
-                x = random.nextInt(arena.getWidth());
-                y = random.nextInt(arena.getHeight());
-            }while (occupied[y][x]);
 
-            Box box = new Box();
+        // Place one single box in the arena; subsequent boxes will be placed afterwards (or not...)
+        do {
+            x = random.nextInt(arena.getWidth());
+            y = random.nextInt(arena.getHeight());
+        }while (occupied[y][x]);
 
-            // First we create a body definition
-            BodyDef bodyDef = new BodyDef();
-            // We set our body to dynamic, for something like ground which doesn't move we would set it to StaticBody
-            bodyDef.type = BodyDef.BodyType.DynamicBody;
-            // Set our body's starting position in the world
-            bodyDef.position.set(x+0.5f, y+0.5f);
+        Box box = boxFactory.create();
+        box.getBody().setTransform(new Vector2(x+0.5f, y+0.5f), 0);
 
-            // Create our body in the world using our body definition
-            Body body = world.createBody(bodyDef);
-            body.setUserData(box);
+        arena.setBox(box);
 
-            // Create a circle shape and set its radius to 6
-            PolygonShape polygonShape = new PolygonShape();
-            polygonShape.setAsBox(0.5f,0.5f );
-
-            // Create a fixture definition to apply our shape to
-            FixtureDef fixtureDef = new FixtureDef();
-            fixtureDef.shape = polygonShape;
-            fixtureDef.density = 1.0f;
-            fixtureDef.friction = 0.0f;
-            fixtureDef.restitution = 0f; // Make it bounce a little bit
-
-            // Create our fixture and attach it to the body
-            Fixture fixture = body.createFixture(fixtureDef);
-            body.setFixedRotation(true);
-
-            box.setBody(body);
-
-            arena.addCoin(box);
-        }
 
         return arena;
 

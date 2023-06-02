@@ -2,9 +2,7 @@ package com.sophia.droid.controller;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.sophia.droid.model.Arena;
-import com.sophia.droid.model.Droid;
 import com.sophia.droid.model.Enemy;
-import com.sophia.droid.repository.EnemyRepository;
 
 public class EnemyController {
     private final Arena arena;

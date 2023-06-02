@@ -3,15 +3,15 @@ package com.sophia.droid.actor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.sophia.droid.model.Box;
-import com.sophia.droid.view.CoinView;
+import com.sophia.droid.view.BoxView;
 
-public class CoinActor extends Actor {
+public class BoxActor extends Actor {
     private final Box box;
-    private final CoinView coinView;
+    private final BoxView boxView;
 
-    public CoinActor(Box box, CoinView coinView) {
+    public BoxActor(Box box, BoxView boxView) {
         this.box = box;
-        this.coinView = coinView;
+        this.boxView = boxView;
 
         setBounds(box.getX()-0.5f, box.getY()-0.5f, box.getWidth(), box.getHeight());
     }
@@ -27,7 +27,7 @@ public class CoinActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        coinView.draw(batch, parentAlpha, getX(), getY(), getWidth(), getHeight());
+        boxView.draw(batch, parentAlpha, getX(), getY(), getWidth(), getHeight());
 
 
     }

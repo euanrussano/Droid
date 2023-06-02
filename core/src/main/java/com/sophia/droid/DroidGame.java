@@ -6,18 +6,16 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.sophia.droid.controller.EnemyDroidContactListener;
 import com.sophia.droid.model.Arena;
 import com.sophia.droid.screens.ArenaStageScreen;
 import com.sophia.droid.screens.MainMenuScreen;
-import com.sophia.droid.screens.TestScreen;
 import com.sophia.droid.service.ArenaGenerator;
+import com.sophia.droid.service.BoxFactory;
 //import com.sophia.droid.controller.ArenaController;
 
 public class DroidGame extends Game{
@@ -25,6 +23,7 @@ public class DroidGame extends Game{
 	public Skin skin;
 	public World world;
 	public Arena arena;
+	public BoxFactory boxFactory;
 
 	@Override
 	public void create() {
@@ -57,8 +56,10 @@ public class DroidGame extends Game{
 
 	public void newGame(int arenaSize){
 
+
 		world = new World(new Vector2(0,0), true);
-		ArenaGenerator arenaGenerator = new ArenaGenerator();
+		boxFactory = new BoxFactory(world);
+		ArenaGenerator arenaGenerator = new ArenaGenerator(boxFactory);
 		arena = arenaGenerator.generateArena(arenaSize, world);
 
 		setScreen(new ArenaStageScreen(this));

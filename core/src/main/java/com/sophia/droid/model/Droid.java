@@ -20,6 +20,7 @@ public class Droid {
     private int healthPoints = 3;
     private int boxes = 0;
     public boolean isDead = false;
+    private int maxBoxes = 3;
 
     public Droid(World world) {
         // First we create a body definition
@@ -158,10 +159,14 @@ public class Droid {
 
     public void interactWith(Box box) {
         boxes += 1;
-        box.getArena().removeCoin(box);
+        box.getArena().removeBox();
     }
 
     public int getBoxes() {
         return boxes;
+    }
+
+    public boolean hasMaxBoxes() {
+        return boxes >= maxBoxes;
     }
 }

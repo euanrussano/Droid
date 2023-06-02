@@ -1,16 +1,14 @@
 package com.sophia.droid.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public class CoinTextureView implements CoinView{
+public class BoxTextureView implements BoxView {
     private final TextureRegion region;
 
-    public CoinTextureView() {
+    public BoxTextureView() {
         Texture texture = new Texture(Gdx.files.internal("crateWood.png"));
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         region = new TextureRegion(texture);
