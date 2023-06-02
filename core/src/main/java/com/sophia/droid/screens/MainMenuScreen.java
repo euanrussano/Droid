@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.sophia.droid.DroidGame;
 
 public class MainMenuScreen implements Screen {
@@ -38,7 +39,7 @@ public class MainMenuScreen implements Screen {
 
     private void setupStage() {
 
-        this.stage = new Stage();
+        this.stage = new Stage(new FillViewport(800, 800));
 
         mainLayout = new Table();
         mainLayout.setFillParent(true);

@@ -33,7 +33,6 @@ public class DroidController extends InputListener {
     public void update(float delta) {
         droid.update(delta);
         if (hpLabel != null){
-
             hpLabel.setText(droid.getHealthPoints());
         }
         if (boxesLabel != null){

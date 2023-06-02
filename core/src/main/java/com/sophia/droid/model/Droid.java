@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Droid {
 
-    private float speed = 2f;;
+    private float speed = 10f;;
     private Arena arena;
     private Vector2 target = null;
 
@@ -19,6 +19,7 @@ public class Droid {
     private Body body;
     private int healthPoints = 3;
     private int boxes = 0;
+    public boolean isDead = false;
 
     public Droid(World world) {
         // First we create a body definition
@@ -147,8 +148,7 @@ public class Droid {
     public void reduceHealthPoints(int points) {
         this.healthPoints -= 1;
         if (this.healthPoints <= 0){
-            // if dead, remove from arena
-            arena = null;
+            isDead = true;
         }
     }
 

@@ -20,7 +20,7 @@ import com.sophia.droid.screens.TestScreen;
 import com.sophia.droid.service.ArenaGenerator;
 //import com.sophia.droid.controller.ArenaController;
 
-public class DroidGame extends Game implements InputProcessor {
+public class DroidGame extends Game{
 
 	public Skin skin;
 	public World world;
@@ -34,7 +34,7 @@ public class DroidGame extends Game implements InputProcessor {
 		Texture texture = new Texture( pixmap );
 
 		BitmapFont font = new BitmapFont();
-		font.getData().scale(5);
+		font.getData().scale(1);
 
 		skin = new Skin();
 		skin.add("default", font);
@@ -65,6 +65,15 @@ public class DroidGame extends Game implements InputProcessor {
 //		setScreen(new TestScreen(this));
 	}
 
+	public void advanceLevel() {
+		System.out.println("TO next level");
+	}
+
+	public void restart() {
+		getScreen().dispose();
+		setScreen(new MainMenuScreen(this));
+	}
+
 	@Override
 	public void resize(int width, int height) {
 
@@ -80,43 +89,6 @@ public class DroidGame extends Game implements InputProcessor {
 
 	}
 
-	@Override
-	public boolean keyDown(int keycode) {
-		return false;
-	}
 
-	@Override
-	public boolean keyUp(int keycode) {
-		return false;
-	}
 
-	@Override
-	public boolean keyTyped(char character) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(float amountX, float amountY) {
-		return false;
-	}
 }

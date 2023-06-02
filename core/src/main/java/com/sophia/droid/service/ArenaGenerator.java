@@ -75,7 +75,7 @@ public class ArenaGenerator {
             arena.addObstacle(obstacle);
 //            obstacleRepository.save(obstacle);
         }
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             do {
                 x = random.nextInt(arena.getWidth());
                 y = random.nextInt(arena.getHeight());
@@ -115,7 +115,7 @@ public class ArenaGenerator {
             arena.addEnemy(enemy);
 //            enemyRepository.save(enemy);
         }
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             do {
                 x = random.nextInt(arena.getWidth());
                 y = random.nextInt(arena.getHeight());
@@ -271,7 +271,7 @@ public class ArenaGenerator {
             arena.addEnemy(enemy);
 //            enemyRepository.save(enemy);
         }
-        for (int i = 0; i < 5*(arenaSize+1); i++) {
+        for (int i = 0; i < 1*(arenaSize+1); i++) {
             do {
                 x = random.nextInt(arena.getWidth());
                 y = random.nextInt(arena.getHeight());

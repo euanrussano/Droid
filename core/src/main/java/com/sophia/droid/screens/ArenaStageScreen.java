@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.sophia.droid.DroidGame;
 import com.sophia.droid.actor.*;
 import com.sophia.droid.controller.*;
@@ -42,7 +44,9 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     private boolean isPaused = true;
     private boolean win = false;
     private boolean gameOver = false;
-    private TextureRegion region;
+
+    private Label gameOverLabel;
+    private TextButton nextLevelButton;
 
 
     public ArenaStageScreen(DroidGame game) {
@@ -53,7 +57,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     @Override
     public void show() {
         mainStage = new Stage(new FillViewport(20f, 20f));
-        uiStage = new Stage();
+        uiStage = new Stage(new FitViewport(300, 300));
 
 //        world = new World(new Vector2(0,0), true);
         enemyDroidContactListener = new EnemyDroidContactListener();
@@ -98,6 +102,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         uiStage.addActor(mainLayout);
 
         Table topBar = new Table();
+        topBar.defaults().pad(10f);
 
         Label droidHPLabel = new Label("0", game.skin);
         droidController.setHPLabel(droidHPLabel);
@@ -112,6 +117,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         topBar.add(boxesLabel).pad(10f);
 
         Table bottomBar = new Table();
+        bottomBar.defaults().pad(10f);
 
         Button pauseButton = new TextButton("Pause", game.skin);
         pauseButton.addListener(new ClickListener(){
@@ -122,9 +128,34 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         });
         bottomBar.add(pauseButton);
 
+        Button backToMainMenuButton = new TextButton("Back to Main", game.skin);
+        backToMainMenuButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.restart();
+            }
+        });
+        bottomBar.add(backToMainMenuButton);
+
+        Table endGameTable = new Table();
+        endGameTable.defaults().pad(10f);
+
+        gameOverLabel = new Label("Game Over", game.skin);
+        gameOverLabel.setVisible(false);
+        endGameTable.add(gameOverLabel).row();
+
+        nextLevelButton = new TextButton("Next", game.skin);
+        nextLevelButton.setVisible(false);
+        nextLevelButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.advanceLevel();
+            }
+        });
+        endGameTable.add(nextLevelButton).row();
 
         mainLayout.add(topBar).growX().row();
-        mainLayout.add().expandX().expandY().row();
+        mainLayout.add(endGameTable).expandX().expandY().row();
         mainLayout.add(bottomBar).growX();
 
 
@@ -174,6 +205,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     @Override
     public void render(float delta) {
 
+
         uiStage.act(delta);
         mainStage.act(delta);
         ScreenUtils.clear(Color.BLACK);
@@ -184,10 +216,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
         uiStage.draw();
 
 
-
         if(!isPaused){
-            droidController.update(delta);
-            enemyController.update(delta);
             game.world.step(1/60f, 6, 2);
 
             // remove the bodies scheduled
@@ -195,16 +224,29 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
                 game.world.destroyBody(body);
             }
             enemyDroidContactListener.clearBodiesForRemoval();
+
+            droidController.update(delta);
+            enemyController.update(delta);
         }
 
-        if (game.arena.getDroid() == null){
+        if (game.arena.getDroid().isDead){
             gameOver = true;
-        }
-
-        if (!gameOver & (game.arena.getCoins().size() == 0)){
-            isPaused = true;
+        } else if (game.arena.getCoins().size() == 0){
             win = true;
         }
+
+        if (win){
+            isPaused = true;
+            gameOverLabel.setText("You won!");
+            gameOverLabel.setVisible(true);
+            nextLevelButton.setVisible(true);
+        } else if (gameOver) {
+            isPaused = true;
+            gameOverLabel.setText("You lost!");
+            gameOverLabel.setVisible(true);
+        }
+
+
 
 
 
@@ -215,6 +257,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
     @Override
     public void resize(int width, int height) {
         mainStage.getViewport().update(width, height);
+        uiStage.getViewport().update(width, height);
 
     }
 
