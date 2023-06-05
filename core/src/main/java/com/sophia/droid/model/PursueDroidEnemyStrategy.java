@@ -6,10 +6,7 @@ public class PursueDroidEnemyStrategy implements EnemyStrategy{
 
     private final Droid droid;
     private final float radius;
-
-    private Vector2 droidPosition = new Vector2();
-    private Vector2 enemyPosition = new Vector2();
-    private Vector2 distance = new Vector2();
+    private final Vector2 distance = new Vector2();
     private boolean inRadius = false;
 
     public PursueDroidEnemyStrategy(Droid droid, float radius) {
