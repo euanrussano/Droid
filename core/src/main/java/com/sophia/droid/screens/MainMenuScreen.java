@@ -28,8 +28,6 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void show() {
-        System.out.println("in main menu screen");
-
         setupStage();
         setupArenaLayout();
 
@@ -111,7 +109,7 @@ public class MainMenuScreen implements Screen {
                 game.newGame(arenaSize);
             }
         });
-
+        pickArenaLayout.add(new Label("Pick the Arena Size:", game.skin)).row();
         pickArenaLayout.add(smallArena).pad(10f).row();
         pickArenaLayout.add(mediumArena).pad(10f).row();
         pickArenaLayout.add(bigArena).pad(10f).row();

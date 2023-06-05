@@ -19,6 +19,8 @@ import com.sophia.droid.screens.MainMenuScreen;
 import com.sophia.droid.service.AppPreferences;
 import com.sophia.droid.service.ArenaGenerator;
 import com.sophia.droid.service.BoxFactory;
+
+import java.util.prefs.Preferences;
 //import com.sophia.droid.controller.ArenaController;
 
 public class DroidGame extends Game{

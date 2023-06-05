@@ -7,10 +7,12 @@ public class AppPreferences {
 
     private static final String PREF_CAMERA_ON_DROID = "camera.droid";
     private static final String PREFS_NAME = "droidPreferences";
-
+    private Preferences preferences;
 
     protected Preferences getPrefs() {
-        return Gdx.app.getPreferences(PREFS_NAME);
+        if (preferences == null)
+            preferences = Gdx.app.getPreferences(PREFS_NAME);
+        return preferences;
     }
 
     public boolean isCameraOnDroid() {
