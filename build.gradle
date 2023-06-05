@@ -38,7 +38,7 @@ configure(subprojects - project(':android')) {
 
 subprojects {
 	version = '1.0.0'
-	ext.appName = 'TinyCiv'
+	ext.appName = 'Droid'
 	repositories {
 		mavenCentral()
 		maven { url 'https://s01.oss.sonatype.org' }
@@ -50,4 +50,4 @@ subprojects {
 	}
 }
 
-eclipse.project.name = 'TinyCiv' + '-parent'
+eclipse.project.name = 'Droid' + '-parent'

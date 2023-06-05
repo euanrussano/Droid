@@ -28,8 +28,6 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void show() {
-        System.out.println("in main menu screen");
-
         setupStage();
         setupArenaLayout();
 
@@ -39,7 +37,7 @@ public class MainMenuScreen implements Screen {
 
     private void setupStage() {
 
-        this.stage = new Stage(new FillViewport(800, 800));
+        this.stage = new Stage(new FitViewport(300, 300));
 
         mainLayout = new Table();
         mainLayout.setFillParent(true);
@@ -48,11 +46,13 @@ public class MainMenuScreen implements Screen {
         Label title = new Label("Droid", game.skin);
         TextButton newGame = new TextButton("New Game", game.skin);
         TextButton loadGame = new TextButton("Load Game", game.skin);
+        TextButton preferences = new TextButton("Preferences", game.skin);
         TextButton exitGame = new TextButton("Exit Game", game.skin);
 
         mainLayout.add(title).pad(50f).row();
         mainLayout.add(newGame).pad(10f).row();
         mainLayout.add(loadGame).pad(10f).row();
+        mainLayout.add(preferences).pad(10f).row();
         mainLayout.add(exitGame).pad(10f).row();
 
 
@@ -63,6 +63,13 @@ public class MainMenuScreen implements Screen {
 
                 mainLayout.remove();
                 stage.addActor(pickArenaLayout);
+            }
+        });
+
+        preferences.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new PreferencesScreen(game));
             }
         });
 
@@ -102,7 +109,7 @@ public class MainMenuScreen implements Screen {
                 game.newGame(arenaSize);
             }
         });
-
+        pickArenaLayout.add(new Label("Pick the Arena Size:", game.skin)).row();
         pickArenaLayout.add(smallArena).pad(10f).row();
         pickArenaLayout.add(mediumArena).pad(10f).row();
         pickArenaLayout.add(bigArena).pad(10f).row();

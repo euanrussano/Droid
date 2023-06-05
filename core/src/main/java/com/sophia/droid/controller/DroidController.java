@@ -24,6 +24,9 @@ public class DroidController extends InputListener {
     private Label hpLabel;
     private Label boxesLabel;
 
+    // wheter the droid controls the main camera (if it follows the droid)
+    private boolean controlCamera = false;
+
     public DroidController(Droid droid, Stage uiStage, Stage mainStage) {
         this.uiStage = uiStage;
         this.mainStage = mainStage;
@@ -32,7 +35,9 @@ public class DroidController extends InputListener {
 
     public void update(float delta) {
         droid.update(delta);
-        mainStage.getViewport().getCamera().position.set(droid.getX(), droid.getY(), 0);
+        if (controlCamera){
+            mainStage.getViewport().getCamera().position.set(droid.getX(), droid.getY(), 0);
+        }
         if (hpLabel != null){
             hpLabel.setText(droid.getHealthPoints());
         }
@@ -68,5 +73,9 @@ public class DroidController extends InputListener {
 
     public void setBoxesLabel(Label boxesLabel) {
         this.boxesLabel = boxesLabel;
+    }
+
+    public void controlCamera(boolean controlCamera) {
+        this.controlCamera = controlCamera;
     }
 }

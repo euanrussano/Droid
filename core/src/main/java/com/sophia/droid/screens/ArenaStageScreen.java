@@ -72,7 +72,9 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
 
         InputMultiplexer im = new InputMultiplexer();
         im.addProcessor(this);
-        if (Gdx.app.getType().equals(Application.ApplicationType.Android)) {
+        if (game.preferences.isCameraOnDroid()){
+            droidController.controlCamera(true);
+        } else if (Gdx.app.getType().equals(Application.ApplicationType.Android)) {
             GestureDetector.GestureListener camGestureController = new OrthoCamGestureController((OrthographicCamera) mainStage.getCamera());
             im.addProcessor(new GestureDetector(camGestureController));
         } else {
@@ -121,7 +123,7 @@ public class ArenaStageScreen extends InputAdapter implements Screen {
                 isPaused = !isPaused;
             }
         });
-        bottomBar.add(pauseButton);
+        bottomBar.add(pauseButton).expand();
 
         Button backToMainMenuButton = new TextButton("Back to Main", game.skin);
         backToMainMenuButton.addListener(new ClickListener(){

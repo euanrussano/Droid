@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -14,8 +16,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.sophia.droid.model.Arena;
 import com.sophia.droid.screens.ArenaStageScreen;
 import com.sophia.droid.screens.MainMenuScreen;
+import com.sophia.droid.service.AppPreferences;
 import com.sophia.droid.service.ArenaGenerator;
 import com.sophia.droid.service.BoxFactory;
+
+import java.util.prefs.Preferences;
 //import com.sophia.droid.controller.ArenaController;
 
 public class DroidGame extends Game{
@@ -24,6 +29,7 @@ public class DroidGame extends Game{
 	public World world;
 	public Arena arena;
 	public BoxFactory boxFactory;
+	public AppPreferences preferences;
 
 	@Override
 	public void create() {
@@ -32,8 +38,12 @@ public class DroidGame extends Game{
 		pixmap.fill();
 		Texture texture = new Texture( pixmap );
 
-		BitmapFont font = new BitmapFont();
-		font.getData().scale(1);
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/kenvector_future.ttf"));
+		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.size = 12;
+		parameter.minFilter = Texture.TextureFilter.Linear;
+		parameter.magFilter = Texture.TextureFilter.Linear;
+		BitmapFont font = generator.generateFont(parameter); // font size 30 pixels
 
 		skin = new Skin();
 		skin.add("default", font);
@@ -49,7 +59,10 @@ public class DroidGame extends Game{
 		ProgressBar.ProgressBarStyle barStyle = new ProgressBar.ProgressBarStyle(skin.newDrawable("default", Color.DARK_GRAY), skin.newDrawable("default", Color.GREEN));
 		barStyle.knobBefore = barStyle.knob;
 		skin.add("default-horizontal", barStyle);
+		CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle(skin.newDrawable("default", Color.DARK_GRAY), skin.newDrawable("default", Color.GREEN), font, Color.WHITE );
+		skin.add("default" ,checkBoxStyle);
 
+		preferences = new AppPreferences();
 
 		setScreen(new MainMenuScreen(this));
 	}
